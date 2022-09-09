@@ -1,5 +1,4 @@
+import './style.css';
 const hello = 'Hello world!';
 
 console.log(hello);
-
-export default hello;
