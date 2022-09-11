@@ -6,6 +6,9 @@ module.exports = {
       borderRadius: {
         base: '8px',
       },
+      fontFamily: {
+        body: ['Inter', 'sans-serif'],
+      },
       colors: {
         accent: '#FF6600',
         background: '#000000',
