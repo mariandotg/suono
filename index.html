@@ -5,8 +5,56 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Suono</title>
-  </head>
-  <body>
     <script type="module" src="/src/main.ts"></script>
+    <link rel="stylesheet" href="/src/style.css" />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="flex flex-col gap-8 p-4 bg-background text-text">
+    <fieldset>
+      <input
+        class="w-full text-sm file:cursor-pointer file:mr-4 file:outline-none file:px-3 file:py-2 file:text-text file:border file:rounded-base file:border-text/25 file:bg-transparent"
+        type="file"
+        id="audio-file"
+        accept="audio/mpeg, audio/ogg, audio/*"
+      />
+    </fieldset>
+    <div id="waveform"></div>
+    <section class="flex items-center gap-4">
+      <button
+        class="flex justify-center p-2 bg-transparent border border-text/25 rounded-base"
+      >
+        <span class="material-icons" id="play_clip">play_arrow</span>
+      </button>
+      <div class="flex gap-1">
+        <p id="time-current" class="underline underline-offset-2">00:00</p>
+        /
+        <p id="time-total" class="underline underline-offset-2">00:00</p>
+      </div>
+    </div>
+    </section>
+    <section class="flex flex-col gap-4">
+      <h2 class="text-3xl font-bold">Clips</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Start</th>
+            <th>End</th>
+            <th>Play</th>
+            <th>Download</th>
+            <th>Delete</th>
+          </tr>
+        </thead>
+        <tbody id="clips" class="text-sm text-center divide-y"></tbody>
+      </table>
+      <button
+        class="px-3 py-2 text-sm bg-transparent border w-max text-text rounded-base border-text/25"
+      >
+        Cut a new clip
+      </button>
+    </section>
   </body>
 </html>
