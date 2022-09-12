@@ -1,3 +1,14 @@
+import WaveSurfer from 'wavesurfer.js';
+
+let wavesurfer = WaveSurfer.create({
+  container: '#waveform',
+  scrollParent: true,
+  barGap: 2,
+  barWidth: 4,
+  progressColor: '#FF6600',
+  barRadius: 4,
+});
+
 const clips = [
   { id: 1, start: 0, end: 62 },
   { id: 2, start: 5, end: 67 },
@@ -31,3 +42,5 @@ clips.map((clip) => {
 
   return (clipsRoot!.innerHTML += tr);
 });
+
+wavesurfer.load('./test.mp3');
