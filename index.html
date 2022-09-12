@@ -8,19 +8,19 @@
     <script type="module" src="/src/main.ts"></script>
     <link rel="stylesheet" href="/src/style.css" />
   </head>
-  <body class="bg-background text-text">
-    <fieldset class="p-4">
+  <body class="flex flex-col gap-8 p-4 bg-background text-text">
+    <fieldset>
       <input
-        class="w-full file:cursor-pointer file:mr-4 text-sm file:outline-none file:px-3 file:py-2 file:text-text file:border file:rounded-base file:border-text/25 file:bg-transparent"
+        class="w-full text-sm file:cursor-pointer file:mr-4 file:outline-none file:px-3 file:py-2 file:text-text file:border file:rounded-base file:border-text/25 file:bg-transparent"
         type="file"
         id="audio-file"
         accept="audio/mpeg, audio/ogg, audio/*"
       />
     </fieldset>
-    <section class="p-4">
+    <section class="flex flex-col gap-4">
       <h2 class="text-3xl font-bold">Clips</h2>
       <button
-        class="text-sm px-3 py-2 text-text border rounded-base border-text/25 bg-transparent"
+        class="px-3 py-2 text-sm bg-transparent border w-max text-text rounded-base border-text/25"
       >
         Cut a new clip
       </button>
