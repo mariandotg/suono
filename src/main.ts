@@ -54,6 +54,16 @@ wavesurfer.on('ready', () => {
   }:${seconds < 10 ? `0${seconds}` : seconds}`;
 });
 
+wavesurfer.on('audioprocess', () => {
+  if (!wavesurfer.isPlaying()) return;
+  const currentTime = wavesurfer.getCurrentTime();
+  const minutes = Math.floor(currentTime / 60);
+  const seconds = Math.floor(currentTime) - minutes * 60;
+  document.getElementById('time-current')!.innerText = `${
+    minutes < 10 ? `0${minutes}` : minutes
+  }:${seconds < 10 ? `0${seconds}` : seconds}`;
+});
+
 const playButton = document.getElementById('play_clip');
 
 const handlePlayAndPause = (playButton: HTMLElement) => {
