@@ -23,20 +23,22 @@ const clipsRoot = document.getElementById('clips');
 clips.map((clip) => {
   const tr = `
     <tr>
-      <td>${clip.id}</td>
-      <td>${formatTime(clip.start)}</td>
-      <td>${formatTime(clip.end)}</td>
-      <td>
+      <td class="p-4">${clip.id}</td>
+      <td class="p-4 underline underline-offset-2">${formatTime(
+        clip.start
+      )}</td>
+      <td class="p-4 underline underline-offset-2">${formatTime(clip.end)}</td>
+      <td class="p-4">
         <span class="material-icons" id="play_clip">
         play_arrow
         </span>
       </td>
-      <td>
+      <td class="p-4">
         <span class="material-icons" id="download">
         file_download
         </span>
       </td>
-      <td>
+      <td class="p-4">
         <span class="material-icons" id="delete">
         delete
         </span>
