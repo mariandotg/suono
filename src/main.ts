@@ -44,3 +44,10 @@ clips.map((clip) => {
 });
 
 wavesurfer.load('./test.mp3');
+
+wavesurfer.on('ready', () => {
+  const totalAudioDuration = wavesurfer.getDuration();
+  const minutes = Math.floor(totalAudioDuration / 60);
+  const seconds = Math.floor(totalAudioDuration) - minutes * 60;
+  document.getElementById('time-total')!.innerText = `${minutes}:${seconds}`;
+});
