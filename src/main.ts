@@ -1,40 +1,5 @@
-import WaveSurfer from 'wavesurfer.js';
-import TimelinePlugin from 'wavesurfer.js/dist/plugin/wavesurfer.timeline.min.js';
-import CursorPlugin from 'wavesurfer.js/dist/plugin/wavesurfer.cursor.min.js';
-
+import wavesurfer from './services/wavesurfer';
 import { formatTime } from './utils/format';
-
-const wavesurfer = WaveSurfer.create({
-  container: '#waveform',
-  scrollParent: true,
-  barGap: 2,
-  barWidth: 4,
-  progressColor: '#FF6600',
-  barRadius: 4,
-  autoCenter: false,
-  height: 160,
-  plugins: [
-    TimelinePlugin.create({
-      container: '#wave-timeline',
-      primaryColor: '#FFFFFF',
-      secondaryColor: '#FFFFFF',
-      primaryFontColor: '#FFFFFF',
-      secondaryFontColor: '#FFFFFF',
-      formatTimeCallback: formatTime,
-    }),
-    CursorPlugin.create({
-      showTime: true,
-      opacity: 1,
-      customShowTimeStyle: {
-        'background-color': '#000000',
-        color: '#FFFFFF',
-        padding: '2px',
-        'font-size': '10px',
-      },
-      formatTimeCallback: formatTime,
-    }),
-  ],
-});
 
 const clips = [
   { id: 1, start: 0, end: 62 },
@@ -43,6 +8,8 @@ const clips = [
 ];
 
 const clipsRoot = document.getElementById('clips');
+const playButton = document.getElementById('play_clip');
+const fileInput = document.getElementById('audio-file');
 
 clips.map((clip) => {
   const tr = `
@@ -71,26 +38,6 @@ clips.map((clip) => {
 
   return (clipsRoot!.innerHTML += tr);
 });
-
-wavesurfer.load('./test.mp3');
-
-wavesurfer.on('ready', () => {
-  const totalAudioDuration = wavesurfer.getDuration();
-  const formattedTime = formatTime(totalAudioDuration);
-
-  document.getElementById('time-total')!.innerText = formattedTime;
-});
-
-wavesurfer.on('audioprocess', () => {
-  if (!wavesurfer.isPlaying()) return;
-
-  const currentTime = wavesurfer.getCurrentTime();
-  const formattedTime = formatTime(currentTime);
-
-  document.getElementById('time-current')!.innerText = formattedTime;
-});
-
-const playButton = document.getElementById('play_clip');
 
 const handlePlayAndPause = (playButton: HTMLElement) => {
   if (playButton.textContent === 'play_arrow') {
