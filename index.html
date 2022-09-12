@@ -22,6 +22,19 @@
       />
     </fieldset>
     <div id="waveform"></div>
+    <section class="flex items-center gap-4">
+      <button
+        class="flex justify-center p-2 bg-transparent border border-text/25 rounded-base"
+      >
+        <span class="material-icons" id="play_clip"> play_arrow </span>
+      </button>
+      <div class="flex gap-1">
+        <p id="time-current">00:00</p>
+        /
+        <p id="time-total">00:00</p>
+      </div>
+    </div>
+    </section>
     <section class="flex flex-col gap-4">
       <h2 class="text-3xl font-bold">Clips</h2>
       <table>
