@@ -49,5 +49,23 @@ wavesurfer.on('ready', () => {
   const totalAudioDuration = wavesurfer.getDuration();
   const minutes = Math.floor(totalAudioDuration / 60);
   const seconds = Math.floor(totalAudioDuration) - minutes * 60;
-  document.getElementById('time-total')!.innerText = `${minutes}:${seconds}`;
+  document.getElementById('time-total')!.innerText = `${
+    minutes < 10 ? `0${minutes}` : minutes
+  }:${seconds < 10 ? `0${seconds}` : seconds}`;
 });
+
+const playButton = document.getElementById('play_clip');
+
+const handlePlayAndPause = (playButton: HTMLElement) => {
+  if (playButton.textContent === 'play_arrow') {
+    playButton.textContent = 'pause';
+    wavesurfer.play();
+  } else {
+    playButton.textContent = 'play_arrow';
+    wavesurfer.pause();
+  }
+};
+
+playButton?.addEventListener('click', () => handlePlayAndPause(playButton));
+
+playButton?.removeEventListener('click', () => handlePlayAndPause(playButton));
