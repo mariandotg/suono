@@ -9,6 +9,7 @@ const wavesurfer = WaveSurfer.create({
   barWidth: 4,
   progressColor: '#FF6600',
   barRadius: 4,
+  autoCenter: false,
 });
 
 const clips = [
