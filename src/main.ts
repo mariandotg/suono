@@ -11,6 +11,9 @@ const clipsRoot = document.getElementById('clips');
 const playButton = document.getElementById('play_clip');
 const fileInput = document.getElementById('audio-file');
 
+const audioCtx = new AudioContext();
+const fileReader = new FileReader();
+
 clips.map((clip) => {
   const tr = `
     <tr>
