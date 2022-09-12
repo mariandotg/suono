@@ -1,4 +1,6 @@
 import WaveSurfer from 'wavesurfer.js';
+import TimelinePlugin from 'wavesurfer.js/dist/plugin/wavesurfer.timeline.min.js';
+import CursorPlugin from 'wavesurfer.js/dist/plugin/wavesurfer.cursor.min.js';
 
 import { formatTime } from './utils/format';
 
@@ -10,6 +12,28 @@ const wavesurfer = WaveSurfer.create({
   progressColor: '#FF6600',
   barRadius: 4,
   autoCenter: false,
+  height: 160,
+  plugins: [
+    TimelinePlugin.create({
+      container: '#wave-timeline',
+      primaryColor: '#FFFFFF',
+      secondaryColor: '#FFFFFF',
+      primaryFontColor: '#FFFFFF',
+      secondaryFontColor: '#FFFFFF',
+      formatTimeCallback: formatTime,
+    }),
+    CursorPlugin.create({
+      showTime: true,
+      opacity: 1,
+      customShowTimeStyle: {
+        'background-color': '#000000',
+        color: '#FFFFFF',
+        padding: '2px',
+        'font-size': '10px',
+      },
+      formatTimeCallback: formatTime,
+    }),
+  ],
 });
 
 const clips = [
@@ -79,5 +103,4 @@ const handlePlayAndPause = (playButton: HTMLElement) => {
 };
 
 playButton?.addEventListener('click', () => handlePlayAndPause(playButton));
-
 playButton?.removeEventListener('click', () => handlePlayAndPause(playButton));
