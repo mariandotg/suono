@@ -1,6 +1,8 @@
 import WaveSurfer from 'wavesurfer.js';
 
-let wavesurfer = WaveSurfer.create({
+import { formatTime } from './utils/format';
+
+const wavesurfer = WaveSurfer.create({
   container: '#waveform',
   scrollParent: true,
   barGap: 2,
@@ -47,21 +49,18 @@ wavesurfer.load('./test.mp3');
 
 wavesurfer.on('ready', () => {
   const totalAudioDuration = wavesurfer.getDuration();
-  const minutes = Math.floor(totalAudioDuration / 60);
-  const seconds = Math.floor(totalAudioDuration) - minutes * 60;
-  document.getElementById('time-total')!.innerText = `${
-    minutes < 10 ? `0${minutes}` : minutes
-  }:${seconds < 10 ? `0${seconds}` : seconds}`;
+  const formattedTime = formatTime(totalAudioDuration);
+
+  document.getElementById('time-total')!.innerText = formattedTime;
 });
 
 wavesurfer.on('audioprocess', () => {
   if (!wavesurfer.isPlaying()) return;
+
   const currentTime = wavesurfer.getCurrentTime();
-  const minutes = Math.floor(currentTime / 60);
-  const seconds = Math.floor(currentTime) - minutes * 60;
-  document.getElementById('time-current')!.innerText = `${
-    minutes < 10 ? `0${minutes}` : minutes
-  }:${seconds < 10 ? `0${seconds}` : seconds}`;
+  const formattedTime = formatTime(currentTime);
+
+  document.getElementById('time-current')!.innerText = formattedTime;
 });
 
 const playButton = document.getElementById('play_clip');
