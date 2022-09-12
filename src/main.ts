@@ -24,8 +24,8 @@ clips.map((clip) => {
   const tr = `
     <tr>
       <td>${clip.id}</td>
-      <td>${clip.start}</td>
-      <td>${clip.end}</td>
+      <td>${formatTime(clip.start)}</td>
+      <td>${formatTime(clip.end)}</td>
       <td>
         <span class="material-icons" id="play_clip">
         play_arrow
