@@ -9,7 +9,9 @@ const clips = [
 
 const clipsRoot = document.getElementById('clips');
 const playButton = document.getElementById('play_clip');
-const fileInput = document.getElementById('audio-file');
+const fileInput = document.getElementById(
+  'audio-file'
+) as HTMLInputElement | null;
 
 const audioCtx = new AudioContext();
 const fileReader = new FileReader();
@@ -42,6 +44,21 @@ clips.map((clip) => {
   return (clipsRoot!.innerHTML += tr);
 });
 
+const readFile = () => {
+  fileReader.readAsArrayBuffer(fileInput!.files![0]);
+
+  fileReader.onload = (event) => {
+    audioCtx
+      .decodeAudioData(event.target!.result as ArrayBuffer)
+      .then((buffer) => {
+        const sound = audioCtx.createBufferSource();
+        sound.buffer = buffer;
+      });
+  };
+
+  wavesurfer.load(URL.createObjectURL(fileInput!.files![0]));
+};
+
 const handlePlayAndPause = (playButton: HTMLElement) => {
   if (playButton.textContent === 'play_arrow') {
     playButton.textContent = 'pause';
@@ -51,6 +68,9 @@ const handlePlayAndPause = (playButton: HTMLElement) => {
     wavesurfer.pause();
   }
 };
+
+fileInput?.addEventListener('change', () => readFile(), false);
+fileInput?.removeEventListener('change', () => readFile(), false);
 
 playButton?.addEventListener('click', () => handlePlayAndPause(playButton));
 playButton?.removeEventListener('click', () => handlePlayAndPause(playButton));
