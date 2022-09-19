@@ -38,8 +38,6 @@ const wavesurfer = WaveSurfer.create({
 const timeCurrent = document.getElementById('time-current');
 const timeTotal = document.getElementById('time-total');
 
-wavesurfer.load('./test.mp3');
-
 wavesurfer.on('ready', () => {
   const totalAudioDuration = wavesurfer.getDuration();
   const formattedTime = formatTime(totalAudioDuration);
