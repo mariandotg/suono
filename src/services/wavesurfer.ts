@@ -1,6 +1,7 @@
 import WaveSurfer from 'wavesurfer.js';
 import TimelinePlugin from 'wavesurfer.js/dist/plugin/wavesurfer.timeline.min.js';
 import CursorPlugin from 'wavesurfer.js/dist/plugin/wavesurfer.cursor.min.js';
+import RegionsPlugin from 'wavesurfer.js/dist/plugin/wavesurfer.regions.js';
 import { formatTime } from '../utils/format';
 
 const wavesurfer = WaveSurfer.create({
@@ -13,6 +14,11 @@ const wavesurfer = WaveSurfer.create({
   autoCenter: false,
   height: 160,
   plugins: [
+    RegionsPlugin.create({
+      dragSelection: {
+        slop: 5,
+      },
+    }),
     TimelinePlugin.create({
       container: '#wave-timeline',
       primaryColor: '#FFFFFF',
@@ -46,8 +52,6 @@ wavesurfer.on('ready', () => {
 });
 
 wavesurfer.on('audioprocess', () => {
-  if (!wavesurfer.isPlaying()) return;
-
   const currentTime = wavesurfer.getCurrentTime();
   const formattedTime = formatTime(currentTime);
 
