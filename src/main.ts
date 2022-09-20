@@ -1,40 +1,5 @@
-import WaveSurfer from 'wavesurfer.js';
-import TimelinePlugin from 'wavesurfer.js/dist/plugin/wavesurfer.timeline.min.js';
-import CursorPlugin from 'wavesurfer.js/dist/plugin/wavesurfer.cursor.min.js';
-
+import wavesurfer from './services/wavesurfer';
 import { formatTime } from './utils/format';
-
-const wavesurfer = WaveSurfer.create({
-  container: '#waveform',
-  scrollParent: true,
-  barGap: 2,
-  barWidth: 4,
-  progressColor: '#FF6600',
-  barRadius: 4,
-  autoCenter: false,
-  height: 160,
-  plugins: [
-    TimelinePlugin.create({
-      container: '#wave-timeline',
-      primaryColor: '#FFFFFF',
-      secondaryColor: '#FFFFFF',
-      primaryFontColor: '#FFFFFF',
-      secondaryFontColor: '#FFFFFF',
-      formatTimeCallback: formatTime,
-    }),
-    CursorPlugin.create({
-      showTime: true,
-      opacity: 1,
-      customShowTimeStyle: {
-        'background-color': '#000000',
-        color: '#FFFFFF',
-        padding: '2px',
-        'font-size': '10px',
-      },
-      formatTimeCallback: formatTime,
-    }),
-  ],
-});
 
 const clips = [
   { id: 1, start: 0, end: 62 },
@@ -43,6 +8,13 @@ const clips = [
 ];
 
 const clipsRoot = document.getElementById('clips');
+const playButton = document.getElementById('play_clip');
+const fileInput = document.getElementById(
+  'audio-file'
+) as HTMLInputElement | null;
+
+const audioCtx = new AudioContext();
+const fileReader = new FileReader();
 
 clips.map((clip) => {
   const tr = `
@@ -72,25 +44,20 @@ clips.map((clip) => {
   return (clipsRoot!.innerHTML += tr);
 });
 
-wavesurfer.load('./test.mp3');
+const readFile = () => {
+  fileReader.readAsArrayBuffer(fileInput!.files![0]);
 
-wavesurfer.on('ready', () => {
-  const totalAudioDuration = wavesurfer.getDuration();
-  const formattedTime = formatTime(totalAudioDuration);
+  fileReader.onload = (event) => {
+    audioCtx
+      .decodeAudioData(event.target!.result as ArrayBuffer)
+      .then((buffer) => {
+        const sound = audioCtx.createBufferSource();
+        sound.buffer = buffer;
+      });
+  };
 
-  document.getElementById('time-total')!.innerText = formattedTime;
-});
-
-wavesurfer.on('audioprocess', () => {
-  if (!wavesurfer.isPlaying()) return;
-
-  const currentTime = wavesurfer.getCurrentTime();
-  const formattedTime = formatTime(currentTime);
-
-  document.getElementById('time-current')!.innerText = formattedTime;
-});
-
-const playButton = document.getElementById('play_clip');
+  wavesurfer.load(URL.createObjectURL(fileInput!.files![0]));
+};
 
 const handlePlayAndPause = (playButton: HTMLElement) => {
   if (playButton.textContent === 'play_arrow') {
@@ -101,6 +68,9 @@ const handlePlayAndPause = (playButton: HTMLElement) => {
     wavesurfer.pause();
   }
 };
+
+fileInput?.addEventListener('change', () => readFile(), false);
+fileInput?.removeEventListener('change', () => readFile(), false);
 
 playButton?.addEventListener('click', () => handlePlayAndPause(playButton));
 playButton?.removeEventListener('click', () => handlePlayAndPause(playButton));
