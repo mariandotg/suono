@@ -14,11 +14,7 @@ const wavesurfer = WaveSurfer.create({
   autoCenter: false,
   height: 160,
   plugins: [
-    RegionsPlugin.create({
-      dragSelection: {
-        slop: 5,
-      },
-    }),
+    RegionsPlugin.create({}),
     TimelinePlugin.create({
       container: '#wave-timeline',
       primaryColor: '#FFFFFF',
@@ -49,6 +45,7 @@ wavesurfer.on('ready', () => {
   const formattedTime = formatTime(totalAudioDuration);
 
   timeTotal!.textContent = formattedTime;
+  wavesurfer.enableDragSelection({ color: 'rgba(255, 0, 0, 0.5)' });
 });
 
 wavesurfer.on('audioprocess', () => {
