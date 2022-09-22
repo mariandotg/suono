@@ -3,6 +3,7 @@ import TimelinePlugin from 'wavesurfer.js/dist/plugin/wavesurfer.timeline.min.js
 import CursorPlugin from 'wavesurfer.js/dist/plugin/wavesurfer.cursor.min.js';
 import RegionsPlugin from 'wavesurfer.js/dist/plugin/wavesurfer.regions.js';
 import { formatTime } from '../utils/format';
+import { addClip, addClipRow, Clip, clips } from '../main';
 
 const wavesurfer = WaveSurfer.create({
   container: '#waveform',
@@ -53,6 +54,20 @@ wavesurfer.on('audioprocess', () => {
   const formattedTime = formatTime(currentTime);
 
   timeCurrent!.textContent = formattedTime;
+});
+
+wavesurfer.on('region-update-end', (newRegion: Clip) => {
+  if (!clips.find((region) => region.id === newRegion.id)) {
+    addClip(newRegion);
+    addClipRow(newRegion);
+  } else {
+    document.getElementById(`${newRegion.id}-start`)!.textContent = formatTime(
+      newRegion.start
+    );
+    document.getElementById(`${newRegion.id}-end`)!.textContent = formatTime(
+      newRegion.end
+    );
+  }
 });
 
 export default wavesurfer;

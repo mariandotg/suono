@@ -1,11 +1,13 @@
 import wavesurfer from './services/wavesurfer';
 import { formatTime } from './utils/format';
 
-const clips = [
-  { id: 1, start: 0, end: 62 },
-  { id: 2, start: 5, end: 67 },
-  { id: 2, start: 5, end: 67 },
-];
+export interface Clip {
+  id: number;
+  start: number;
+  end: number;
+}
+
+export const clips: Array<Clip> = [];
 
 const clipsRoot = document.getElementById('clips');
 const playButton = document.getElementById('play_clip');
@@ -16,33 +18,44 @@ const fileInput = document.getElementById(
 const audioCtx = new AudioContext();
 const fileReader = new FileReader();
 
-clips.map((clip) => {
+export const addClip = (newRegion: Clip) => {
+  const newClip = {
+    id: newRegion.id,
+    start: newRegion.start,
+    end: newRegion.end,
+  };
+  return clips.push(newClip);
+};
+
+export const addClipRow = (clip: Clip) => {
   const tr = `
-    <tr>
-      <td class="p-4">${clip.id}</td>
-      <td class="p-4 underline underline-offset-2">${formatTime(
-        clip.start
-      )}</td>
-      <td class="p-4 underline underline-offset-2">${formatTime(clip.end)}</td>
-      <td class="p-4">
-        <span class="material-icons" id="play_clip">
-        play_arrow
-        </span>
-      </td>
-      <td class="p-4">
-        <span class="material-icons" id="download">
-        file_download
-        </span>
-      </td>
-      <td class="p-4">
-        <span class="material-icons" id="delete">
-        delete
-        </span>
-      </td>
-    </tr>`;
+      <tr id="${clip.id}">
+        <td class="p-4" id="${clip.id}-id">${clip.id}</td>
+        <td class="p-4 underline underline-offset-2" id="${
+          clip.id
+        }-start">${formatTime(clip.start)}</td>
+        <td class="p-4 underline underline-offset-2" id="${
+          clip.id
+        }-end">${formatTime(clip.end)}</td>
+        <td class="p-4" id="${clip.id}-play">
+          <span class="material-icons" id="play_clip">
+          play_arrow
+          </span>
+        </td>
+        <td class="p-4" id="${clip.id}-download">
+          <span class="material-icons" id="download">
+          file_download
+          </span>
+        </td>
+        <td class="p-4" id="${clip.id}-delete">
+          <span class="material-icons" id="delete">
+          delete
+          </span>
+        </td>
+      </tr>`;
 
   return (clipsRoot!.innerHTML += tr);
-});
+};
 
 const readFile = () => {
   fileReader.readAsArrayBuffer(fileInput!.files![0]);
