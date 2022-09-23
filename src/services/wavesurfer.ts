@@ -3,7 +3,7 @@ import TimelinePlugin from 'wavesurfer.js/dist/plugin/wavesurfer.timeline.min.js
 import CursorPlugin from 'wavesurfer.js/dist/plugin/wavesurfer.cursor.min.js';
 import RegionsPlugin from 'wavesurfer.js/dist/plugin/wavesurfer.regions.js';
 import { formatTime } from '../utils/format';
-import { addClip, addClipRow, Clip, clips } from '../main';
+import { addClip, addClipRow, Clip, clips, playClip } from '../main';
 
 const wavesurfer = WaveSurfer.create({
   container: '#waveform',
@@ -56,18 +56,30 @@ wavesurfer.on('audioprocess', () => {
   timeCurrent!.textContent = formattedTime;
 });
 
+wavesurfer.on('region-created', (newRegion: Clip) => {
+  addClip(newRegion);
+  addClipRow(newRegion);
+
+  clips.map((clip) => {
+    const playClipButton = document.getElementById(`${clip.id}-play`);
+
+    playClipButton!.addEventListener(
+      'click',
+      () => playClip(clip.id, playClipButton!),
+      false
+    );
+
+    return true;
+  });
+});
+
 wavesurfer.on('region-update-end', (newRegion: Clip) => {
-  if (!clips.find((region) => region.id === newRegion.id)) {
-    addClip(newRegion);
-    addClipRow(newRegion);
-  } else {
-    document.getElementById(`${newRegion.id}-start`)!.textContent = formatTime(
-      newRegion.start
-    );
-    document.getElementById(`${newRegion.id}-end`)!.textContent = formatTime(
-      newRegion.end
-    );
-  }
+  document.getElementById(`${newRegion.id}-start`)!.textContent = formatTime(
+    newRegion.start
+  );
+  document.getElementById(`${newRegion.id}-end`)!.textContent = formatTime(
+    newRegion.end
+  );
 });
 
 export default wavesurfer;

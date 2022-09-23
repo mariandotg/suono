@@ -37,24 +37,24 @@ export const addClipRow = (clip: Clip) => {
         <td class="p-4 underline underline-offset-2" id="${
           clip.id
         }-end">${formatTime(clip.end)}</td>
-        <td class="p-4" id="${clip.id}-play">
-          <span class="material-icons" id="play_clip">
-          play_arrow
-          </span>
+        <td class="p-4">
+            <span class="material-icons cursor-pointer" id="${
+              clip.id
+            }-play">play_arrow</span>
         </td>
-        <td class="p-4" id="${clip.id}-download">
-          <span class="material-icons" id="download">
-          file_download
-          </span>
+        <td class="p-4">
+            <span class="material-icons cursor-pointer" id="${
+              clip.id
+            }-download">file_download</span>
         </td>
-        <td class="p-4" id="${clip.id}-delete">
-          <span class="material-icons" id="delete">
-          delete
-          </span>
+        <td class="p-4">
+            <span class="material-icons cursor-pointer" id="${
+              clip.id
+            }-delete">delete</span>
         </td>
       </tr>`;
 
-  return (clipsRoot!.innerHTML += tr);
+  clipsRoot!.innerHTML += tr;
 };
 
 const readFile = () => {
@@ -79,6 +79,16 @@ const handlePlayAndPause = (playButton: HTMLElement) => {
   } else {
     playButton.textContent = 'play_arrow';
     wavesurfer.pause();
+  }
+};
+
+export const playClip = (regionId: number, playClipButton: HTMLElement) => {
+  if (playClipButton.textContent === 'play_arrow') {
+    wavesurfer.regions.list[regionId].play();
+    playClipButton.textContent = 'pause';
+  } else {
+    wavesurfer.pause();
+    playClipButton.textContent = 'play_arrow';
   }
 };
 
