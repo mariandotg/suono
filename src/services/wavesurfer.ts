@@ -3,7 +3,14 @@ import TimelinePlugin from 'wavesurfer.js/dist/plugin/wavesurfer.timeline.min.js
 import CursorPlugin from 'wavesurfer.js/dist/plugin/wavesurfer.cursor.min.js';
 import RegionsPlugin from 'wavesurfer.js/dist/plugin/wavesurfer.regions.js';
 import { formatTime } from '../utils/format';
-import { addClip, addClipRow, Clip, clips, playClip } from '../main';
+import {
+  addClip,
+  addClipRow,
+  Clip,
+  clips,
+  deleteClip,
+  playClip,
+} from '../main';
 
 const wavesurfer = WaveSurfer.create({
   container: '#waveform',
@@ -62,13 +69,18 @@ wavesurfer.on('region-created', (newRegion: Clip) => {
 
   clips.map((clip) => {
     const playClipButton = document.getElementById(`${clip.id}-play`);
+    const deleteClipButton = document.getElementById(`${clip.id}-delete`);
 
     playClipButton!.addEventListener(
       'click',
       () => playClip(clip.id, playClipButton!),
       false
     );
-
+    deleteClipButton!.addEventListener(
+      'click',
+      () => deleteClip(clip.id),
+      false
+    );
     return true;
   });
 });

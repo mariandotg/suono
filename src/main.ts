@@ -7,7 +7,7 @@ export interface Clip {
   end: number;
 }
 
-export const clips: Array<Clip> = [];
+export let clips: Array<Clip> = [];
 
 const clipsRoot = document.getElementById('clips');
 const playButton = document.getElementById('play_clip');
@@ -57,6 +57,11 @@ export const addClipRow = (clip: Clip) => {
   clipsRoot!.innerHTML += tr;
 };
 
+export const deleteClipsRow = (clipId: number) => {
+  const element = document.getElementById(clipId.toString());
+  element!.remove();
+};
+
 const readFile = () => {
   fileReader.readAsArrayBuffer(fileInput!.files![0]);
 
@@ -90,6 +95,12 @@ export const playClip = (regionId: number, playClipButton: HTMLElement) => {
     wavesurfer.pause();
     playClipButton.textContent = 'play_arrow';
   }
+};
+
+export const deleteClip = (regionId: number) => {
+  wavesurfer.regions.list[regionId].remove();
+  clips = clips.filter((clip) => clip.id !== regionId);
+  deleteClipsRow(regionId);
 };
 
 fileInput?.addEventListener('change', () => readFile(), false);
