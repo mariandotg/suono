@@ -100,4 +100,8 @@ wavesurfer.on('region-update-end', (newRegion: Clip) => {
   );
 });
 
+wavesurfer.on('region-out', (region: Clip) => {
+  document.getElementById(`${region.id}-play`)!.textContent = 'play_arrow';
+});
+
 export default wavesurfer;
