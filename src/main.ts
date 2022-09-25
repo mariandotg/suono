@@ -10,7 +10,7 @@ export interface Clip {
 export let clips: Array<Clip> = [];
 
 const clipsRoot = document.getElementById('clips');
-const playButton = document.getElementById('play_clip');
+const playButton = document.getElementById('play');
 const fileInput = document.getElementById(
   'audio-file'
 ) as HTMLInputElement | null;
