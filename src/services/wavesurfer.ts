@@ -10,6 +10,7 @@ import {
   clips,
   deleteClip,
   playClip,
+  testing,
 } from '../main';
 
 const wavesurfer = WaveSurfer.create({
@@ -82,11 +83,6 @@ wavesurfer.on('region-created', (newRegion: Clip) => {
       () => deleteClip(clip.id),
       false
     );
-    downloadClipButton!.addEventListener(
-      'click',
-      () => console.log(`download audio ${clip.id}`),
-      false
-    );
     return true;
   });
 });
@@ -97,6 +93,19 @@ wavesurfer.on('region-update-end', (newRegion: Clip) => {
   );
   document.getElementById(`${newRegion.id}-end`)!.textContent = formatTime(
     newRegion.end
+  );
+
+  const downloadClipButton = document.getElementById(
+    `${newRegion.id}-download`
+  );
+
+  downloadClipButton!.addEventListener(
+    'click',
+    () => {
+      console.log(wavesurfer.backend);
+      testing(wavesurfer.backend.ac, wavesurfer.backend.buffer, newRegion);
+    },
+    false
   );
 });
 

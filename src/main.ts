@@ -103,6 +103,44 @@ export const deleteClip = (regionId: number) => {
   deleteClipsRow(regionId);
 };
 
+export const testing = (audioCtx: any, buffer: any, clip: Clip) => {
+  const segmentDuration = clip.end - clip.start;
+
+  const originalBuffer = buffer;
+
+  const init = clip.start * originalBuffer.sampleRate;
+  const fin = clip.end * originalBuffer.sampleRate;
+
+  const emptySegment = audioCtx.createBuffer(
+    originalBuffer.numberOfChannels,
+    segmentDuration * originalBuffer.sampleRate,
+    originalBuffer.sampleRate
+  );
+
+  const channelsCant = originalBuffer.numberOfChannels;
+
+  for (let i = 0; i < channelsCant; i++) {
+    const chanData = originalBuffer.getChannelData(i);
+    const segmentChanData = emptySegment.getChannelData(i);
+
+    for (let j = init, g = 0, len = fin; j <= len; j++, g++) {
+      segmentChanData[g] = chanData[j];
+    }
+  }
+  console.log('emptySegment', emptySegment);
+
+  const audioData = {
+    channels: Array.from({ length: emptySegment.numberOfChannels }).map(
+      (currentElement, index) => {
+        return emptySegment.getChannelData(index);
+      }
+    ),
+    sampleRate: emptySegment.sampleRate,
+    length: emptySegment.length,
+  };
+  console.log('audioData', audioData);
+};
+
 fileInput?.addEventListener('change', () => readFile(), false);
 fileInput?.removeEventListener('change', () => readFile(), false);
 
