@@ -1,6 +1,6 @@
 import wavesurfer from './services/wavesurfer';
 import { formatTime } from './utils/format';
-
+import lamejs from 'lamejs';
 export interface Clip {
   id: number;
   start: number;
@@ -103,42 +103,76 @@ export const deleteClip = (regionId: number) => {
   deleteClipsRow(regionId);
 };
 
-export const testing = (audioCtx: any, buffer: any, clip: Clip) => {
-  const segmentDuration = clip.end - clip.start;
+const floatTo16BitPCM = (input: any, output: Int16Array) => {
+  for (let i = 0; i < input.length; i++) {
+    const s = Math.max(-1, Math.min(1, input[i]));
+    output[i] = s < 0 ? s * 0x8000 : s * 0x7fff;
+  }
+};
 
+export const downloadClip = (
+  audioCtx: AudioContext,
+  buffer: AudioBuffer,
+  clip: Clip
+) => {
   const originalBuffer = buffer;
 
+  const segmentDuration = clip.end - clip.start;
   const init = clip.start * originalBuffer.sampleRate;
   const fin = clip.end * originalBuffer.sampleRate;
 
+  const emptyBuffer = [];
   const emptySegment = audioCtx.createBuffer(
     originalBuffer.numberOfChannels,
     segmentDuration * originalBuffer.sampleRate,
     originalBuffer.sampleRate
   );
 
-  const channelsCant = originalBuffer.numberOfChannels;
-
-  for (let i = 0; i < channelsCant; i++) {
-    const chanData = originalBuffer.getChannelData(i);
-    const segmentChanData = emptySegment.getChannelData(i);
-
-    for (let j = init, g = 0, len = fin; j <= len; j++, g++) {
-      segmentChanData[g] = chanData[j];
-    }
+  for (let i = 0; i < originalBuffer.numberOfChannels; i++) {
+    emptySegment.copyToChannel(
+      originalBuffer.getChannelData(i).slice(init, fin),
+      i
+    );
   }
-  console.log('emptySegment', emptySegment);
 
+  const { numberOfChannels, sampleRate, length } = emptySegment;
   const audioData = {
-    channels: Array.from({ length: emptySegment.numberOfChannels }).map(
+    channels: Array.from({ length: numberOfChannels }).map(
       (currentElement, index) => {
         return emptySegment.getChannelData(index);
       }
     ),
-    sampleRate: emptySegment.sampleRate,
-    length: emptySegment.length,
+    sampleRate,
+    length,
   };
-  console.log('audioData', audioData);
+
+  const mp3Encoder = new lamejs.Mp3Encoder(2, audioData.sampleRate, 128);
+
+  const right = new Int16Array(audioData.channels[0].length);
+  floatTo16BitPCM(audioData.channels[0], right);
+  const left = new Int16Array(audioData.channels[1].length);
+  floatTo16BitPCM(audioData.channels[1], left);
+
+  for (let i = 0; i < audioData.channels[0].length; i += 1152) {
+    const leftChunk = left.subarray(i, i + 1152);
+    const rightChunk = right.subarray(i, i + 1152);
+    const mp3buf = mp3Encoder.encodeBuffer(leftChunk, rightChunk);
+
+    if (mp3buf.length > 0) {
+      emptyBuffer.push(mp3buf);
+    }
+  }
+  const mp3buf = mp3Encoder.flush();
+  emptyBuffer.push(new Int8Array(mp3buf));
+
+  const blob = new Blob(emptyBuffer, { type: 'audio/mp3' });
+  const processedAudio = new window.Audio();
+  processedAudio.src = URL.createObjectURL(blob);
+
+  const anchorAudio = document.createElement('a');
+  anchorAudio.href = processedAudio.src;
+  anchorAudio.download = 'output.mp3';
+  anchorAudio.click();
 };
 
 fileInput?.addEventListener('change', () => readFile(), false);

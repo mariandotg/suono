@@ -10,7 +10,7 @@ import {
   clips,
   deleteClip,
   playClip,
-  testing,
+  downloadClip,
 } from '../main';
 
 const wavesurfer = WaveSurfer.create({
@@ -71,7 +71,6 @@ wavesurfer.on('region-created', (newRegion: Clip) => {
   clips.map((clip) => {
     const playClipButton = document.getElementById(`${clip.id}-play`);
     const deleteClipButton = document.getElementById(`${clip.id}-delete`);
-    const downloadClipButton = document.getElementById(`${clip.id}-download`);
 
     playClipButton!.addEventListener(
       'click',
@@ -101,10 +100,8 @@ wavesurfer.on('region-update-end', (newRegion: Clip) => {
 
   downloadClipButton!.addEventListener(
     'click',
-    () => {
-      console.log(wavesurfer.backend);
-      testing(wavesurfer.backend.ac, wavesurfer.backend.buffer, newRegion);
-    },
+    () =>
+      downloadClip(wavesurfer.backend.ac, wavesurfer.backend.buffer, newRegion),
     false
   );
 });
