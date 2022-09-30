@@ -11,6 +11,7 @@ import {
   deleteClip,
   playClip,
   downloadClip,
+  toggleLoading,
 } from '../main';
 
 const wavesurfer = WaveSurfer.create({
@@ -100,8 +101,10 @@ wavesurfer.on('region-update-end', (newRegion: Clip) => {
 
   downloadClipButton!.addEventListener(
     'click',
-    () =>
-      downloadClip(wavesurfer.backend.ac, wavesurfer.backend.buffer, newRegion),
+    () => {
+      toggleLoading(true);
+      downloadClip(wavesurfer.backend.ac, wavesurfer.backend.buffer, newRegion);
+    },
     false
   );
 });

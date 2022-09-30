@@ -110,6 +110,17 @@ const floatTo16BitPCM = (input: any, output: Int16Array) => {
   }
 };
 
+export const toggleLoading = (isLoading: boolean) => {
+  const loading = document.getElementById('loading');
+  if (isLoading) {
+    loading?.classList.replace('invisible', 'visible');
+    loading?.classList.replace('opacity-0', 'opacity-100');
+  } else {
+    loading?.classList.replace('visible', 'invisible');
+    loading?.classList.replace('opacity-100', 'opacity-0');
+  }
+};
+
 export const downloadClip = (
   audioCtx: AudioContext,
   buffer: AudioBuffer,
@@ -173,6 +184,7 @@ export const downloadClip = (
   anchorAudio.href = processedAudio.src;
   anchorAudio.download = 'output.mp3';
   anchorAudio.click();
+  toggleLoading(false);
 };
 
 fileInput?.addEventListener('change', () => readFile(), false);
