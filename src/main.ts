@@ -138,54 +138,61 @@ export const downloadClip = async (
   buffer: AudioBuffer,
   clip: Clip
 ) => {
-  const originalBuffer = buffer;
+  const downloadClipButton = document.getElementById(
+    `${clip.id}-download-link`
+  ) as HTMLAnchorElement;
+  if (downloadClipButton!.href) {
+    toggleLoading(false);
+  } else {
+    const originalBuffer = buffer;
 
-  const segmentDuration = clip.end - clip.start;
-  const init = clip.start * originalBuffer.sampleRate;
-  const fin = clip.end * originalBuffer.sampleRate;
+    const segmentDuration = clip.end - clip.start;
+    const init = clip.start * originalBuffer.sampleRate;
+    const fin = clip.end * originalBuffer.sampleRate;
 
-  const emptyBuffer = [];
-  const emptySegment = audioCtx.createBuffer(
-    originalBuffer.numberOfChannels,
-    segmentDuration * originalBuffer.sampleRate,
-    originalBuffer.sampleRate
-  );
-
-  for (let i = 0; i < originalBuffer.numberOfChannels; i++) {
-    emptySegment.copyToChannel(
-      originalBuffer.getChannelData(i).slice(init, fin),
-      i
+    const emptyBuffer = [];
+    const emptySegment = audioCtx.createBuffer(
+      originalBuffer.numberOfChannels,
+      segmentDuration * originalBuffer.sampleRate,
+      originalBuffer.sampleRate
     );
+
+    for (let i = 0; i < originalBuffer.numberOfChannels; i++) {
+      emptySegment.copyToChannel(
+        originalBuffer.getChannelData(i).slice(init, fin),
+        i
+      );
+    }
+
+    const { numberOfChannels, sampleRate, length } = emptySegment;
+    const audioData = {
+      channels: Array.from({ length: numberOfChannels }).map(
+        (currentElement, index) => {
+          return emptySegment.getChannelData(index);
+        }
+      ),
+      sampleRate,
+      length,
+    };
+
+    await encodeAudio(audioData, emptyBuffer)
+      .then((res) => {
+        console.log(res);
+        const blob = new Blob(res.res, { type: 'audio/mp3' });
+        const processedAudio = new window.Audio();
+        processedAudio.src = URL.createObjectURL(blob);
+        const downloadClipButton = document.getElementById(
+          `${clip.id}-download-link`
+        ) as HTMLAnchorElement;
+        downloadClipButton!.href = processedAudio.src;
+        downloadClipButton!.download = `suono-${clip.id}.mp3`;
+        downloadClipButton!.click();
+        toggleLoading(false);
+      })
+      .catch((c) => {
+        console.log(c);
+      });
   }
-
-  const { numberOfChannels, sampleRate, length } = emptySegment;
-  const audioData = {
-    channels: Array.from({ length: numberOfChannels }).map(
-      (currentElement, index) => {
-        return emptySegment.getChannelData(index);
-      }
-    ),
-    sampleRate,
-    length,
-  };
-
-  await encodeAudio(audioData, emptyBuffer)
-    .then((res) => {
-      console.log(res);
-      const blob = new Blob(res.res, { type: 'audio/mp3' });
-      const processedAudio = new window.Audio();
-      processedAudio.src = URL.createObjectURL(blob);
-      const downloadClipButton = document.getElementById(
-        `${clip.id}-download-link`
-      ) as HTMLAnchorElement;
-      downloadClipButton!.href = processedAudio.src;
-      downloadClipButton!.download = 'output.mp3';
-      downloadClipButton!.click();
-      toggleLoading(false);
-    })
-    .catch((c) => {
-      console.log(c);
-    });
 };
 
 fileInput.addEventListener('change', () => readFile(), false);
