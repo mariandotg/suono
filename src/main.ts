@@ -177,7 +177,6 @@ export const downloadClip = async (
 
     await encodeAudio(audioData, emptyBuffer)
       .then((res) => {
-        console.log(res);
         const blob = new Blob(res.res, { type: 'audio/mp3' });
         const processedAudio = new window.Audio();
         processedAudio.src = URL.createObjectURL(blob);
@@ -191,6 +190,7 @@ export const downloadClip = async (
       })
       .catch((c) => {
         console.log(c);
+        toggleLoading(false);
       });
   }
 };
