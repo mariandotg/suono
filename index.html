@@ -62,26 +62,53 @@
         <p id="time-total" class="underline underline-offset-2">00:00</p>
       </div>
     </section>
-    <section class="flex flex-col gap-4">
-      <h2 class="text-3xl font-bold">Clips</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Start</th>
-            <th>End</th>
-            <th>Play</th>
-            <th>Download</th>
-            <th>Delete</th>
-          </tr>
-        </thead>
-        <tbody id="clips" class="text-sm text-center divide-y"></tbody>
-      </table>
-      <button
-        class="px-3 py-2 text-sm bg-transparent border w-max text-text rounded-base border-text/25"
-      >
-        Cut a new clip
-      </button>
-    </section>
+    <div class="grid grid-cols-1 gap-x-4 tablet:grid-cols-3">
+      <section class="flex flex-col gap-4 tablet:order-last tablet:col-span-1">
+        <h2 class="text-3xl font-bold">Cut a new clip</h2>
+        <form class="flex flex-col gap-4">
+          <div class="grid grid-cols-2 gap-x-4">
+            <div class="flex flex-col gap-2">
+              <label>Start time</label>
+              <input
+                placeholder="start"
+                type="text"
+                pattern="/\d\d:\d\d/g"
+                class="px-3 py-2 text-sm bg-transparent border w-full text-text rounded-base border-text/25"
+              />
+            </div>
+            <div class="flex flex-col gap-2">
+              <label>End time</label>
+              <input
+                placeholder="end"
+                type="text"
+                pattern="/\d\d:\d\d/g"
+                class="px-3 py-2 text-sm bg-transparent border w-full text-text rounded-base border-text/25"
+              />
+            </div>
+          </div>
+          <button
+            class="px-3 py-2 text-sm bg-transparent border w-full text-text rounded-base border-text/25"
+          >
+            Cut a new clip
+          </button>
+        </form>
+      </section>
+      <section class="flex flex-col gap-4 tablet:col-span-2">
+        <h2 class="text-3xl font-bold">Clips</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Start</th>
+              <th>End</th>
+              <th>Play</th>
+              <th>Download</th>
+              <th>Delete</th>
+            </tr>
+          </thead>
+          <tbody id="clips" class="text-sm text-center divide-y"></tbody>
+        </table>
+      </section>
+    </div>
   </body>
 </html>
