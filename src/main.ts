@@ -11,9 +11,7 @@ export let clips: Array<Clip> = [];
 
 const clipsRoot = document.getElementById('clips');
 const playButton = document.getElementById('play');
-const fileInput = document.getElementById(
-  'audio-file'
-) as HTMLInputElement | null;
+const fileInput = document.getElementById('audio-file') as HTMLInputElement;
 
 const audioCtx = new AudioContext();
 const fileReader = new FileReader();
@@ -43,9 +41,11 @@ export const addClipRow = (clip: Clip) => {
             }-play">play_arrow</span>
         </td>
         <td class="p-4">
+          <a id="${clip.id}-download-link">
             <span class="material-icons cursor-pointer" id="${
               clip.id
             }-download">file_download</span>
+          </a>
         </td>
         <td class="p-4">
             <span class="material-icons cursor-pointer" id="${
@@ -63,7 +63,7 @@ export const deleteClipsRow = (clipId: number) => {
 };
 
 const readFile = () => {
-  fileReader.readAsArrayBuffer(fileInput!.files![0]);
+  fileReader.readAsArrayBuffer(fileInput.files![0]);
 
   fileReader.onload = (event) => {
     audioCtx
@@ -74,7 +74,7 @@ const readFile = () => {
       });
   };
 
-  wavesurfer.load(URL.createObjectURL(fileInput!.files![0]));
+  wavesurfer.load(URL.createObjectURL(fileInput.files![0]));
 };
 
 const handlePlayAndPause = (playButton: HTMLElement) => {
@@ -103,8 +103,100 @@ export const deleteClip = (regionId: number) => {
   deleteClipsRow(regionId);
 };
 
-fileInput?.addEventListener('change', () => readFile(), false);
-fileInput?.removeEventListener('change', () => readFile(), false);
+export const toggleLoading = (isLoading: boolean) => {
+  const loading = document.getElementById('loading');
+  if (isLoading) {
+    loading?.classList.replace('invisible', 'visible');
+    loading?.classList.replace('opacity-0', 'opacity-100');
+  } else {
+    loading?.classList.replace('visible', 'invisible');
+    loading?.classList.replace('opacity-100', 'opacity-0');
+  }
+};
+
+const encodeAudio = (audioData: any, emptyBuffer: any[]) => {
+  return new Promise((resolve, reject) => {
+    const audioWorker = new Worker(
+      new URL('./worker/worker.ts', import.meta.url),
+      { type: 'module' }
+    );
+
+    audioWorker.onmessage = (event) => {
+      if (event.data != null) {
+        resolve(event.data);
+      } else {
+        reject(new Error('Error'));
+      }
+    };
+
+    audioWorker.postMessage({ audioData, emptyBuffer });
+  });
+};
+
+export const downloadClip = async (
+  audioCtx: AudioContext,
+  buffer: AudioBuffer,
+  clip: Clip
+) => {
+  const downloadClipButton = document.getElementById(
+    `${clip.id}-download-link`
+  ) as HTMLAnchorElement;
+  if (downloadClipButton!.href) {
+    toggleLoading(false);
+  } else {
+    const originalBuffer = buffer;
+
+    const segmentDuration = clip.end - clip.start;
+    const init = clip.start * originalBuffer.sampleRate;
+    const fin = clip.end * originalBuffer.sampleRate;
+
+    const emptyBuffer: Array<any> = [];
+    const emptySegment = audioCtx.createBuffer(
+      originalBuffer.numberOfChannels,
+      segmentDuration * originalBuffer.sampleRate,
+      originalBuffer.sampleRate
+    );
+
+    for (let i = 0; i < originalBuffer.numberOfChannels; i++) {
+      emptySegment.copyToChannel(
+        originalBuffer.getChannelData(i).slice(init, fin),
+        i
+      );
+    }
+
+    const { numberOfChannels, sampleRate, length } = emptySegment;
+    const audioData = {
+      channels: Array.from({ length: numberOfChannels }).map(
+        (currentElement, index) => {
+          return emptySegment.getChannelData(index);
+        }
+      ),
+      sampleRate,
+      length,
+    };
+
+    await encodeAudio(audioData, emptyBuffer)
+      .then((res) => {
+        const blob = new Blob(res.res, { type: 'audio/mp3' });
+        const processedAudio = new window.Audio();
+        processedAudio.src = URL.createObjectURL(blob);
+        const downloadClipButton = document.getElementById(
+          `${clip.id}-download-link`
+        ) as HTMLAnchorElement;
+        downloadClipButton!.href = processedAudio.src;
+        downloadClipButton!.download = `suono-${clip.id}.mp3`;
+        downloadClipButton!.click();
+        toggleLoading(false);
+      })
+      .catch((c) => {
+        console.log(c);
+        toggleLoading(false);
+      });
+  }
+};
+
+fileInput.addEventListener('change', () => readFile(), false);
+fileInput.removeEventListener('change', () => readFile(), false);
 
 playButton?.addEventListener('click', () => handlePlayAndPause(playButton));
 playButton?.removeEventListener('click', () => handlePlayAndPause(playButton));

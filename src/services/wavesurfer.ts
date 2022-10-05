@@ -10,6 +10,8 @@ import {
   clips,
   deleteClip,
   playClip,
+  downloadClip,
+  toggleLoading,
 } from '../main';
 
 const wavesurfer = WaveSurfer.create({
@@ -70,7 +72,6 @@ wavesurfer.on('region-created', (newRegion: Clip) => {
   clips.map((clip) => {
     const playClipButton = document.getElementById(`${clip.id}-play`);
     const deleteClipButton = document.getElementById(`${clip.id}-delete`);
-    const downloadClipButton = document.getElementById(`${clip.id}-download`);
 
     playClipButton!.addEventListener(
       'click',
@@ -80,11 +81,6 @@ wavesurfer.on('region-created', (newRegion: Clip) => {
     deleteClipButton!.addEventListener(
       'click',
       () => deleteClip(clip.id),
-      false
-    );
-    downloadClipButton!.addEventListener(
-      'click',
-      () => console.log(`download audio ${clip.id}`),
       false
     );
     return true;
@@ -97,6 +93,19 @@ wavesurfer.on('region-update-end', (newRegion: Clip) => {
   );
   document.getElementById(`${newRegion.id}-end`)!.textContent = formatTime(
     newRegion.end
+  );
+
+  const downloadClipButton = document.getElementById(
+    `${newRegion.id}-download`
+  );
+
+  downloadClipButton!.addEventListener(
+    'click',
+    () => {
+      toggleLoading(true);
+      downloadClip(wavesurfer.backend.ac, wavesurfer.backend.buffer, newRegion);
+    },
+    false
   );
 });
 
