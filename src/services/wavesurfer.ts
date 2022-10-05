@@ -21,7 +21,6 @@ const wavesurfer = WaveSurfer.create({
   barWidth: 4,
   progressColor: '#FF6600',
   barRadius: 4,
-  autoCenter: false,
   height: 160,
   plugins: [
     RegionsPlugin.create({}),
@@ -55,7 +54,6 @@ wavesurfer.on('ready', () => {
   const formattedTime = formatTime(totalAudioDuration);
 
   timeTotal!.textContent = formattedTime;
-  wavesurfer.enableDragSelection({ color: 'rgba(255, 0, 0, 0.5)' });
 });
 
 wavesurfer.on('audioprocess', () => {
