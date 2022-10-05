@@ -13,6 +13,7 @@ import {
   downloadClip,
   toggleLoading,
 } from '../main';
+import { isTouchScreenDevice } from '../utils/isTouchScreenDevice';
 
 const wavesurfer = WaveSurfer.create({
   container: '#waveform',
@@ -48,6 +49,10 @@ const wavesurfer = WaveSurfer.create({
 
 const timeCurrent = document.getElementById('time-current');
 const timeTotal = document.getElementById('time-total');
+
+if (!isTouchScreenDevice()) {
+  wavesurfer.enableDragSelection({ color: 'rgba(255, 0, 0, 0.5)' });
+}
 
 wavesurfer.on('ready', () => {
   const totalAudioDuration = wavesurfer.getDuration();
