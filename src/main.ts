@@ -150,7 +150,7 @@ export const downloadClip = async (
     const init = clip.start * originalBuffer.sampleRate;
     const fin = clip.end * originalBuffer.sampleRate;
 
-    const emptyBuffer = [];
+    const emptyBuffer: Array<any> = [];
     const emptySegment = audioCtx.createBuffer(
       originalBuffer.numberOfChannels,
       segmentDuration * originalBuffer.sampleRate,
