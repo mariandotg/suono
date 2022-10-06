@@ -4,12 +4,49 @@ import { formatTime } from './utils/format';
 
 export let clips: Array<Clip> = [];
 
-const clipsRoot = document.getElementById('clips');
-const playButton = document.getElementById('play');
 const fileInput = document.getElementById('audio-file') as HTMLInputElement;
+const playButton = document.getElementById('play');
+const clipsRoot = document.getElementById('clips');
+const newClipButton = document.getElementById('new-clip-button');
+const startInputMM = document.getElementById(
+  'new-clip-start-mm'
+) as HTMLInputElement;
+const startInputSS = document.getElementById(
+  'new-clip-start-ss'
+) as HTMLInputElement;
+const endInputMM = document.getElementById(
+  'new-clip-end-mm'
+) as HTMLInputElement;
+const endInputSS = document.getElementById(
+  'new-clip-end-ss'
+) as HTMLInputElement;
 
 const audioCtx = new AudioContext();
 const fileReader = new FileReader();
+
+newClipButton?.addEventListener('click', (event) => {
+  event.preventDefault();
+
+  const startMM = parseFloat(startInputMM.value);
+  const startSS = parseFloat(startInputSS.value);
+  const endMM = parseFloat(endInputMM.value);
+  const endSS = parseFloat(endInputSS.value);
+
+  if (startSS >= 60 || endSS >= 60) {
+    alert('Error SS >= 60');
+    return;
+  }
+
+  const start = startMM * 60 + startSS;
+  const end = endMM * 60 + endSS;
+
+  if (start < wavesurfer.getDuration() || end <= wavesurfer.getDuration())
+    wavesurfer.addRegion({ start, end, color: 'rgba(255, 0, 0, 0.5)' });
+  else alert('Error');
+
+  console.log(start);
+  console.log(end);
+});
 
 export const addClip = (newRegion: Clip) => {
   const newClip = {
@@ -36,8 +73,8 @@ export const addClipRow = (clip: Clip) => {
             }-play">play_arrow</span>
         </td>
         <td class="p-4">
-          <a id="${clip.id}-download-link">
-            <span class="material-icons cursor-pointer" id="${
+          <a id="${clip.id}-download-link" class="select-none">
+            <span class="material-icons cursor-pointer select-none" id="${
               clip.id
             }-download">file_download</span>
           </a>
