@@ -1,11 +1,6 @@
 import wavesurfer from './services/wavesurfer';
+import { Clip } from './types';
 import { formatTime } from './utils/format';
-
-export interface Clip {
-  id: number;
-  start: number;
-  end: number;
-}
 
 export let clips: Array<Clip> = [];
 
