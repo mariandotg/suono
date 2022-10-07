@@ -1,20 +1,55 @@
 import wavesurfer from './services/wavesurfer';
-import { formatTime } from './utils/format';
 
-export interface Clip {
-  id: number;
-  start: number;
-  end: number;
-}
+import { formatTime } from './utils/format';
+import { toggleLoading } from './utils/toggleLoading';
+
+import { Clip } from './types';
 
 export let clips: Array<Clip> = [];
 
-const clipsRoot = document.getElementById('clips');
-const playButton = document.getElementById('play');
 const fileInput = document.getElementById('audio-file') as HTMLInputElement;
+const playButton = document.getElementById('play');
+const clipsRoot = document.getElementById('clips');
+const newClipButton = document.getElementById('new-clip-button');
+const startInputMM = document.getElementById(
+  'new-clip-start-mm'
+) as HTMLInputElement;
+const startInputSS = document.getElementById(
+  'new-clip-start-ss'
+) as HTMLInputElement;
+const endInputMM = document.getElementById(
+  'new-clip-end-mm'
+) as HTMLInputElement;
+const endInputSS = document.getElementById(
+  'new-clip-end-ss'
+) as HTMLInputElement;
 
 const audioCtx = new AudioContext();
 const fileReader = new FileReader();
+
+newClipButton?.addEventListener('click', (event) => {
+  event.preventDefault();
+
+  const startMM = parseFloat(startInputMM.value);
+  const startSS = parseFloat(startInputSS.value);
+  const endMM = parseFloat(endInputMM.value);
+  const endSS = parseFloat(endInputSS.value);
+
+  if (startSS >= 60 || endSS >= 60) {
+    alert('Error SS >= 60');
+    return;
+  }
+
+  const start = startMM * 60 + startSS;
+  const end = endMM * 60 + endSS;
+
+  if (start < wavesurfer.getDuration() || end <= wavesurfer.getDuration())
+    wavesurfer.addRegion({ start, end, color: 'rgba(255, 0, 0, 0.5)' });
+  else alert('Error');
+
+  console.log(start);
+  console.log(end);
+});
 
 export const addClip = (newRegion: Clip) => {
   const newClip = {
@@ -28,7 +63,6 @@ export const addClip = (newRegion: Clip) => {
 export const addClipRow = (clip: Clip) => {
   const tr = `
       <tr id="${clip.id}">
-        <td class="p-4" id="${clip.id}-id">${clip.id}</td>
         <td class="p-4 underline underline-offset-2" id="${
           clip.id
         }-start">${formatTime(clip.start)}</td>
@@ -41,8 +75,8 @@ export const addClipRow = (clip: Clip) => {
             }-play">play_arrow</span>
         </td>
         <td class="p-4">
-          <a id="${clip.id}-download-link">
-            <span class="material-icons cursor-pointer" id="${
+          <a id="${clip.id}-download-link" class="select-none">
+            <span class="material-icons cursor-pointer select-none" id="${
               clip.id
             }-download">file_download</span>
           </a>
@@ -103,17 +137,6 @@ export const deleteClip = (regionId: number) => {
   deleteClipsRow(regionId);
 };
 
-export const toggleLoading = (isLoading: boolean) => {
-  const loading = document.getElementById('loading');
-  if (isLoading) {
-    loading?.classList.replace('invisible', 'visible');
-    loading?.classList.replace('opacity-0', 'opacity-100');
-  } else {
-    loading?.classList.replace('visible', 'invisible');
-    loading?.classList.replace('opacity-100', 'opacity-0');
-  }
-};
-
 const encodeAudio = (audioData: any, emptyBuffer: any[]) => {
   return new Promise((resolve, reject) => {
     const audioWorker = new Worker(
@@ -142,7 +165,7 @@ export const downloadClip = async (
     `${clip.id}-download-link`
   ) as HTMLAnchorElement;
   if (downloadClipButton!.href) {
-    toggleLoading(false);
+    toggleLoading('loading', false);
   } else {
     const originalBuffer = buffer;
 
@@ -186,11 +209,11 @@ export const downloadClip = async (
         downloadClipButton!.href = processedAudio.src;
         downloadClipButton!.download = `suono-${clip.id}.mp3`;
         downloadClipButton!.click();
-        toggleLoading(false);
+        toggleLoading('loading', false);
       })
       .catch((c) => {
         console.log(c);
-        toggleLoading(false);
+        toggleLoading('loading', false);
       });
   }
 };

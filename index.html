@@ -12,7 +12,7 @@
       rel="stylesheet"
     />
   </head>
-  <body class="flex flex-col gap-8 p-4 bg-background text-text">
+  <body class="flex flex-col gap-4 p-4 bg-background text-text">
     <div
       class="fixed z-50 w-screen h-screen opacity-0 invisible bg-background/75 flex items-center justify-center top-0 left-0"
       id="loading"
@@ -62,26 +62,88 @@
         <p id="time-total" class="underline underline-offset-2">00:00</p>
       </div>
     </section>
-    <section class="flex flex-col gap-4">
-      <h2 class="text-3xl font-bold">Clips</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Start</th>
-            <th>End</th>
-            <th>Play</th>
-            <th>Download</th>
-            <th>Delete</th>
-          </tr>
-        </thead>
-        <tbody id="clips" class="text-sm text-center divide-y"></tbody>
-      </table>
-      <button
-        class="px-3 py-2 text-sm bg-transparent border w-max text-text rounded-base border-text/25"
+    <div class="grid grid-cols-1 gap-x-4 gap-y-4 tablet:grid-cols-4">
+      <section
+        class="flex flex-col gap-4 tablet:order-last tablet:col-span-1 opacity-0 invisible"
+        id="cut-new-clip"
       >
-        Cut a new clip
-      </button>
-    </section>
+        <h2 class="text-2xl font-bold">Cut a new clip</h2>
+        <form class="flex flex-col gap-4" id="clip-form">
+          <div class="flex flex-col gap-2">
+            <label>Start time</label>
+            <div class="flex gap-4">
+              <input
+                placeholder="MM"
+                id="new-clip-start-mm"
+                type="number"
+                max="59"
+                min="00"
+                class="px-3 py-2 text-sm bg-transparent border w-1/2 text-text rounded-base border-text/25"
+                step="01"
+                required
+              />
+              <input
+                placeholder="SS"
+                id="new-clip-start-ss"
+                type="number"
+                max="59"
+                min="00"
+                class="px-3 py-2 text-sm bg-transparent border w-1/2 text-text rounded-base border-text/25"
+                step="01"
+                required
+              />
+            </div>
+            <label class="select-none">End time</label>
+            <div class="flex gap-4">
+              <input
+                placeholder="MM"
+                id="new-clip-end-mm"
+                type="number"
+                max="59"
+                min="00"
+                class="px-3 py-2 text-sm bg-transparent border w-1/2 text-text rounded-base border-text/25"
+                step="01"
+                required
+              />
+              <input
+                placeholder="SS"
+                id="new-clip-end-ss"
+                type="number"
+                max="59"
+                min="00"
+                class="px-3 py-2 text-sm bg-transparent border w-1/2 text-text rounded-base border-text/25"
+                step="01"
+                required
+              />
+            </div>
+          </div>
+          <button
+            type="submit"
+            class="px-3 py-2 text-sm bg-accent border w-full text-text rounded-base border-transparent"
+            id="new-clip-button"
+          >
+            Cut a new clip
+          </button>
+        </form>
+      </section>
+      <section
+        class="flex flex-col gap-4 tablet:col-span-3 opacity-0 invisible"
+        id="clips-list"
+      >
+        <h2 class="text-2xl font-bold">Clips</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Start</th>
+              <th>End</th>
+              <th>Play</th>
+              <th>Download</th>
+              <th>Delete</th>
+            </tr>
+          </thead>
+          <tbody id="clips" class="text-sm text-center divide-y"></tbody>
+        </table>
+      </section>
+    </div>
   </body>
 </html>

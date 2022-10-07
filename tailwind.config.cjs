@@ -3,6 +3,11 @@ module.exports = {
   content: ['./*.{html,js, ts}', './src/**/*.{html,js, ts}'],
   theme: {
     extend: {
+      screens: {
+        mobile: '550px',
+        tablet: '834px',
+        desktop: '1024px',
+      },
       borderRadius: {
         base: '8px',
       },

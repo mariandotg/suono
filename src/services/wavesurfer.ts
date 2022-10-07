@@ -2,17 +2,21 @@ import WaveSurfer from 'wavesurfer.js';
 import TimelinePlugin from 'wavesurfer.js/dist/plugin/wavesurfer.timeline.min.js';
 import CursorPlugin from 'wavesurfer.js/dist/plugin/wavesurfer.cursor.min.js';
 import RegionsPlugin from 'wavesurfer.js/dist/plugin/wavesurfer.regions.js';
+
 import { formatTime } from '../utils/format';
+import { isTouchScreenDevice } from '../utils/isTouchScreenDevice';
+import { toggleLoading } from '../utils/toggleLoading';
+
 import {
   addClip,
   addClipRow,
-  Clip,
   clips,
   deleteClip,
   playClip,
   downloadClip,
-  toggleLoading,
 } from '../main';
+
+import { Clip } from '../types';
 
 const wavesurfer = WaveSurfer.create({
   container: '#waveform',
@@ -21,8 +25,8 @@ const wavesurfer = WaveSurfer.create({
   barWidth: 4,
   progressColor: '#FF6600',
   barRadius: 4,
-  autoCenter: false,
   height: 160,
+  splitChannels: false,
   plugins: [
     RegionsPlugin.create({}),
     TimelinePlugin.create({
@@ -50,13 +54,19 @@ const wavesurfer = WaveSurfer.create({
 const timeCurrent = document.getElementById('time-current');
 const timeTotal = document.getElementById('time-total');
 
+if (!isTouchScreenDevice()) {
+  wavesurfer.enableDragSelection({ color: 'rgba(255, 0, 0, 0.5)' });
+}
+
 wavesurfer.on('ready', () => {
   const totalAudioDuration = wavesurfer.getDuration();
   const formattedTime = formatTime(totalAudioDuration);
 
   timeTotal!.textContent = formattedTime;
-  wavesurfer.enableDragSelection({ color: 'rgba(255, 0, 0, 0.5)' });
+  toggleLoading('cut-new-clip', true);
 });
+
+wavesurfer.on('destroy', () => toggleLoading('cut-new-clip', false));
 
 wavesurfer.on('audioprocess', () => {
   const currentTime = wavesurfer.getCurrentTime();
@@ -66,9 +76,9 @@ wavesurfer.on('audioprocess', () => {
 });
 
 wavesurfer.on('region-created', (newRegion: Clip) => {
+  if (clips.length === 0) toggleLoading('clips-list', true);
   addClip(newRegion);
   addClipRow(newRegion);
-
   clips.map((clip) => {
     const playClipButton = document.getElementById(`${clip.id}-play`);
     const deleteClipButton = document.getElementById(`${clip.id}-delete`);
@@ -102,7 +112,7 @@ wavesurfer.on('region-update-end', (newRegion: Clip) => {
   downloadClipButton!.addEventListener(
     'click',
     () => {
-      toggleLoading(true);
+      toggleLoading('loading', true);
       downloadClip(wavesurfer.backend.ac, wavesurfer.backend.buffer, newRegion);
     },
     false
