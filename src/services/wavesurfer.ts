@@ -2,18 +2,21 @@ import WaveSurfer from 'wavesurfer.js';
 import TimelinePlugin from 'wavesurfer.js/dist/plugin/wavesurfer.timeline.min.js';
 import CursorPlugin from 'wavesurfer.js/dist/plugin/wavesurfer.cursor.min.js';
 import RegionsPlugin from 'wavesurfer.js/dist/plugin/wavesurfer.regions.js';
+
 import { formatTime } from '../utils/format';
+import { isTouchScreenDevice } from '../utils/isTouchScreenDevice';
+import { toggleLoading } from '../utils/toggleLoading';
+
 import {
   addClip,
   addClipRow,
-  Clip,
   clips,
   deleteClip,
   playClip,
   downloadClip,
-  toggleLoading,
 } from '../main';
-import { isTouchScreenDevice } from '../utils/isTouchScreenDevice';
+
+import { Clip } from '../types';
 
 const wavesurfer = WaveSurfer.create({
   container: '#waveform',
@@ -59,7 +62,10 @@ wavesurfer.on('ready', () => {
   const formattedTime = formatTime(totalAudioDuration);
 
   timeTotal!.textContent = formattedTime;
+  toggleLoading('cut-new-clip', true);
 });
+
+wavesurfer.on('destroy', () => toggleLoading('cut-new-clip', false));
 
 wavesurfer.on('audioprocess', () => {
   const currentTime = wavesurfer.getCurrentTime();
@@ -69,9 +75,9 @@ wavesurfer.on('audioprocess', () => {
 });
 
 wavesurfer.on('region-created', (newRegion: Clip) => {
+  if (clips.length === 0) toggleLoading('clips-list', true);
   addClip(newRegion);
   addClipRow(newRegion);
-
   clips.map((clip) => {
     const playClipButton = document.getElementById(`${clip.id}-play`);
     const deleteClipButton = document.getElementById(`${clip.id}-delete`);
@@ -105,7 +111,7 @@ wavesurfer.on('region-update-end', (newRegion: Clip) => {
   downloadClipButton!.addEventListener(
     'click',
     () => {
-      toggleLoading(true);
+      toggleLoading('loading', true);
       downloadClip(wavesurfer.backend.ac, wavesurfer.backend.buffer, newRegion);
     },
     false

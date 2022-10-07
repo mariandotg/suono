@@ -1,6 +1,9 @@
 import wavesurfer from './services/wavesurfer';
-import { Clip } from './types';
+
 import { formatTime } from './utils/format';
+import { toggleLoading } from './utils/toggleLoading';
+
+import { Clip } from './types';
 
 export let clips: Array<Clip> = [];
 
@@ -135,17 +138,6 @@ export const deleteClip = (regionId: number) => {
   deleteClipsRow(regionId);
 };
 
-export const toggleLoading = (isLoading: boolean) => {
-  const loading = document.getElementById('loading');
-  if (isLoading) {
-    loading?.classList.replace('invisible', 'visible');
-    loading?.classList.replace('opacity-0', 'opacity-100');
-  } else {
-    loading?.classList.replace('visible', 'invisible');
-    loading?.classList.replace('opacity-100', 'opacity-0');
-  }
-};
-
 const encodeAudio = (audioData: any, emptyBuffer: any[]) => {
   return new Promise((resolve, reject) => {
     const audioWorker = new Worker(
@@ -174,7 +166,7 @@ export const downloadClip = async (
     `${clip.id}-download-link`
   ) as HTMLAnchorElement;
   if (downloadClipButton!.href) {
-    toggleLoading(false);
+    toggleLoading('loading', false);
   } else {
     const originalBuffer = buffer;
 
@@ -218,11 +210,11 @@ export const downloadClip = async (
         downloadClipButton!.href = processedAudio.src;
         downloadClipButton!.download = `suono-${clip.id}.mp3`;
         downloadClipButton!.click();
-        toggleLoading(false);
+        toggleLoading('loading', false);
       })
       .catch((c) => {
         console.log(c);
-        toggleLoading(false);
+        toggleLoading('loading', false);
       });
   }
 };
