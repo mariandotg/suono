@@ -1,7 +1,4 @@
 import WaveSurfer from 'wavesurfer.js';
-import TimelinePlugin from 'wavesurfer.js/dist/plugin/wavesurfer.timeline.min.js';
-import CursorPlugin from 'wavesurfer.js/dist/plugin/wavesurfer.cursor.min.js';
-import RegionsPlugin from 'wavesurfer.js/dist/plugin/wavesurfer.regions.js';
 
 import { formatTime } from '../utils/format';
 import { isTouchScreenDevice } from '../utils/isTouchScreenDevice';
@@ -17,6 +14,10 @@ import {
 } from '../main';
 
 import { Clip } from '../types';
+
+const TimelinePlugin = require('wavesurfer.js/dist/plugin/wavesurfer.timeline.min.js');
+const CursorPlugin = require('wavesurfer.js/dist/plugin/wavesurfer.cursor.min.js');
+const RegionsPlugin = require('wavesurfer.js/dist/plugin/wavesurfer.regions.js');
 
 const wavesurfer = WaveSurfer.create({
   container: '#waveform',
