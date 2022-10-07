@@ -3,7 +3,7 @@ import wavesurfer from './services/wavesurfer';
 import { formatTime } from './utils/format';
 import { toggleLoading } from './utils/toggleLoading';
 
-import { Clip } from './types';
+import { Clip, ExtendedWaveSurferBackend } from './types';
 
 export let clips: Array<Clip> = [];
 
@@ -157,8 +157,7 @@ const encodeAudio = (audioData: any, emptyBuffer: any[]) => {
 };
 
 export const downloadClip = async (
-  audioCtx: AudioContext,
-  buffer: AudioBuffer,
+  backend: ExtendedWaveSurferBackend,
   clip: Clip
 ) => {
   const downloadClipButton = document.getElementById(
@@ -167,7 +166,8 @@ export const downloadClip = async (
   if (downloadClipButton!.href) {
     toggleLoading('loading', false);
   } else {
-    const originalBuffer = buffer;
+    const audioCtx = backend.getAudioContext();
+    const originalBuffer = backend.buffer;
 
     const segmentDuration = clip.end - clip.start;
     const init = clip.start * originalBuffer.sampleRate;
@@ -190,7 +190,7 @@ export const downloadClip = async (
     const { numberOfChannels, sampleRate, length } = emptySegment;
     const audioData = {
       channels: Array.from({ length: numberOfChannels }).map(
-        (currentElement, index) => {
+        (_currentElement, index) => {
           return emptySegment.getChannelData(index);
         }
       ),
@@ -199,8 +199,8 @@ export const downloadClip = async (
     };
 
     await encodeAudio(audioData, emptyBuffer)
-      .then((res) => {
-        const blob = new Blob(res.res, { type: 'audio/mp3' });
+      .then((data: any) => {
+        const blob = new Blob(data.res, { type: 'audio/mp3' });
         const processedAudio = new window.Audio();
         processedAudio.src = URL.createObjectURL(blob);
         const downloadClipButton = document.getElementById(

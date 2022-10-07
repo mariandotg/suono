@@ -1,8 +1,13 @@
 import WaveSurfer from 'wavesurfer.js';
+import TimelinePlugin from 'wavesurfer.js/dist/plugin/wavesurfer.timeline.min.js';
+import CursorPlugin from 'wavesurfer.js/dist/plugin/wavesurfer.cursor.min.js';
+import RegionsPlugin from 'wavesurfer.js/dist/plugin/wavesurfer.regions.js';
 
 import { formatTime } from '../utils/format';
 import { isTouchScreenDevice } from '../utils/isTouchScreenDevice';
 import { toggleLoading } from '../utils/toggleLoading';
+
+import { Clip, ExtendedWaveSurferBackend } from '../types';
 
 import {
   addClip,
@@ -12,12 +17,6 @@ import {
   playClip,
   downloadClip,
 } from '../main';
-
-import { Clip } from '../types';
-
-const TimelinePlugin = require('wavesurfer.js/dist/plugin/wavesurfer.timeline.min.js');
-const CursorPlugin = require('wavesurfer.js/dist/plugin/wavesurfer.cursor.min.js');
-const RegionsPlugin = require('wavesurfer.js/dist/plugin/wavesurfer.regions.js');
 
 const wavesurfer = WaveSurfer.create({
   container: '#waveform',
@@ -62,7 +61,6 @@ if (!isTouchScreenDevice()) {
 wavesurfer.on('ready', () => {
   const totalAudioDuration = wavesurfer.getDuration();
   const formattedTime = formatTime(totalAudioDuration);
-
   timeTotal!.textContent = formattedTime;
   toggleLoading('cut-new-clip', true);
 });
@@ -114,7 +112,7 @@ wavesurfer.on('region-update-end', (newRegion: Clip) => {
     'click',
     () => {
       toggleLoading('loading', true);
-      downloadClip(wavesurfer.backend.ac, wavesurfer.backend.buffer, newRegion);
+      downloadClip(wavesurfer.backend as ExtendedWaveSurferBackend, newRegion);
     },
     false
   );

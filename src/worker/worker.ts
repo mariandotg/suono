@@ -1,6 +1,6 @@
-import { floatTo16BitPCM } from '../utils/to16BitPCM';
+import lamejs from 'lamejs';
 
-const lamejs = require('lamejs');
+import { floatTo16BitPCM } from '../utils/to16BitPCM';
 
 const encode = (audioData: any, emptyBuffer: any[]) => {
   const mp3Encoder = new lamejs.Mp3Encoder(
