@@ -26,6 +26,7 @@ const wavesurfer = WaveSurfer.create({
   progressColor: '#FF6600',
   barRadius: 4,
   height: 160,
+  splitChannels: false,
   plugins: [
     RegionsPlugin.create({}),
     TimelinePlugin.create({
