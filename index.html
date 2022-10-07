@@ -12,7 +12,7 @@
       rel="stylesheet"
     />
   </head>
-  <body class="flex flex-col gap-8 p-4 bg-background text-text">
+  <body class="flex flex-col gap-4 p-4 bg-background text-text">
     <div
       class="fixed z-50 w-screen h-screen opacity-0 invisible bg-background/75 flex items-center justify-center top-0 left-0"
       id="loading"
@@ -63,7 +63,10 @@
       </div>
     </section>
     <div class="grid grid-cols-1 gap-x-4 tablet:grid-cols-4">
-      <section class="flex flex-col gap-4 tablet:order-last tablet:col-span-1">
+      <section
+        class="flex flex-col gap-4 tablet:order-last tablet:col-span-1 opacity-0 invisible"
+        id="cut-new-clip"
+      >
         <h2 class="text-2xl font-bold">Cut a new clip</h2>
         <form class="flex flex-col gap-4" id="clip-form">
           <div class="flex flex-col gap-2">
@@ -123,7 +126,10 @@
           </button>
         </form>
       </section>
-      <section class="flex flex-col gap-4 tablet:col-span-3">
+      <section
+        class="flex flex-col gap-4 tablet:col-span-3 opacity-0 invisible"
+        id="clips-list"
+      >
         <h2 class="text-2xl font-bold">Clips</h2>
         <table>
           <thead>
