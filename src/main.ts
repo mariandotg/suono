@@ -63,7 +63,6 @@ export const addClip = (newRegion: Clip) => {
 export const addClipRow = (clip: Clip) => {
   const tr = `
       <tr id="${clip.id}">
-        <td class="p-4" id="${clip.id}-id">${clip.id}</td>
         <td class="p-4 underline underline-offset-2" id="${
           clip.id
         }-start">${formatTime(clip.start)}</td>
