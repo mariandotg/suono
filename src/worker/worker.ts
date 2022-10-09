@@ -45,6 +45,7 @@ const encode = (audioData: any, emptyBuffer: any[]) => {
       else reject(new Error('Buffer error'));
     });
   }
+  return null;
 };
 
 onmessage = async (event) => {
