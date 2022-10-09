@@ -1,4 +1,4 @@
-import lamejs from 'lamejs';
+import lamejs from 'lamejstmp';
 
 import { floatTo16BitPCM } from '../utils/to16BitPCM';
 
