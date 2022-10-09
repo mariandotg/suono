@@ -27,8 +27,7 @@
     "vite": "^3.1.0"
   },
   "dependencies": {
-    "lamejs": "^1.2.1",
-    "lamejstmp": "^1.0.1",
+    "lamejs": "1.2.0",
     "wavesurfer.js": "^6.2.0"
   }
 }
