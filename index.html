@@ -36,14 +36,21 @@
         <span class="sr-only">Loading...</span>
       </div>
     </div>
-    <fieldset>
-      <input
-        class="w-full text-sm file:cursor-pointer file:mr-4 file:outline-none file:px-3 file:py-2 file:text-text file:border file:rounded-base file:border-text/25 file:bg-transparent"
-        type="file"
-        id="audio-file"
-        accept="audio/mpeg, audio/ogg, audio/*"
-      />
-    </fieldset>
+    <section class="flex flex-col gap-4">
+      <div
+        class="grid grid-cols-2 gap-4 visible opacity-100"
+        id="samples"
+      ></div>
+      <fieldset>
+        <input
+          class="w-full text-sm file:cursor-pointer file:mr-4 file:outline-none file:px-3 file:py-2 file:text-text file:border file:rounded-base file:border-text/25 file:bg-transparent"
+          type="file"
+          id="audio-file"
+          accept="audio/mpeg, audio/ogg, audio/*"
+        />
+      </fieldset>
+      <span id="detail-tab" class="hidden"></span>
+    </section>
     <section>
       <div id="waveform"></div>
       <div id="wave-timeline"></div>
@@ -146,4 +153,7 @@
       </section>
     </div>
   </body>
+  <footer>
+    <div class="hidden bg-red-500"></div>
+  </footer>
 </html>
