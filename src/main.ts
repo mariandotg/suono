@@ -7,6 +7,8 @@ import { Clip, ExtendedWaveSurferBackend } from './types';
 
 export let clips: Array<Clip> = [];
 
+const detailTab = document.getElementById('detail-tab');
+const samplesSection = document.getElementById('samples');
 const fileInput = document.getElementById('audio-file') as HTMLInputElement;
 const playButton = document.getElementById('play');
 const clipsRoot = document.getElementById('clips');
@@ -26,6 +28,47 @@ const endInputSS = document.getElementById(
 
 const audioCtx = new AudioContext();
 const fileReader = new FileReader();
+
+const samples = [
+  {
+    title: 'test',
+    file: '/test.mp3',
+  },
+];
+
+const displaySamples = () =>
+  samples.map((sample, index) => {
+    const sampleTemplate = `
+    <div
+      class="bg-red-500 p-4 rounded-base cursor-pointer hover:backdrop-opacity-25 hover:brightness-50"
+      id="sample-${index}"
+    >
+      ${sample.title}
+    </div>
+  `;
+    samplesSection!.innerHTML += sampleTemplate;
+    const sampleElement = document.getElementById(`sample-${index}`);
+    sampleElement!.addEventListener(
+      'click',
+      () => {
+        toggleLoading('loading', true);
+        wavesurfer.load(sample.file);
+        wavesurfer.on('ready', () => {
+          toggleLoading('loading', false);
+          toggleLoading('samples', false);
+          samplesSection!.innerHTML = '';
+          samplesSection!.classList.replace('grid', 'hidden');
+          fileInput!.classList.add('hidden');
+          detailTab!.classList.replace('hidden', 'flex');
+          detailTab!.innerHTML = sample.title;
+        });
+      },
+      false
+    );
+    return samplesSection;
+  });
+
+displaySamples();
 
 newClipButton?.addEventListener('click', (event) => {
   event.preventDefault();
