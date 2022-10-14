@@ -7,7 +7,7 @@ import { Clip, ExtendedWaveSurferBackend } from './types';
 
 export let clips: Array<Clip> = [];
 
-const detailTab = document.getElementById('detail-tab');
+const detailTabName = document.getElementById('detail-tab-file-name');
 const samplesSection = document.getElementById('samples');
 const fileInput = document.getElementById('audio-file') as HTMLInputElement;
 const playButton = document.getElementById('play');
@@ -44,6 +44,7 @@ samples.map((sample, index) => {
     () => {
       toggleLoading(true);
       wavesurfer.load(sample.file);
+      detailTabName!.textContent = sample.title;
     },
     false
   );
@@ -129,6 +130,7 @@ const readFile = () => {
   };
 
   wavesurfer.load(URL.createObjectURL(fileInput.files![0]));
+  detailTabName!.textContent = fileInput.files![0].name;
 };
 
 const handlePlayAndPause = (playButton: HTMLElement) => {
