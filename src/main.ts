@@ -7,6 +7,13 @@ import { Clip, ExtendedWaveSurferBackend } from './types';
 
 export let clips: Array<Clip> = [];
 
+const samples = [
+  {
+    title: 'test',
+    file: '/test.mp3',
+  },
+];
+
 const detailTabName = document.getElementById('detail-tab-file-name');
 const samplesSection = document.getElementById('samples');
 const fileInput = document.getElementById('audio-file') as HTMLInputElement;
@@ -29,13 +36,6 @@ const endInputSS = document.getElementById(
 const audioCtx = new AudioContext();
 const fileReader = new FileReader();
 
-const samples = [
-  {
-    title: 'test',
-    file: '/test.mp3',
-  },
-];
-
 samples.map((sample, index) => {
   const sampleElement = document.getElementById(`sample-${index}`);
   sampleElement!.innerHTML = sample.title;
@@ -48,30 +48,6 @@ samples.map((sample, index) => {
     },
     false
   );
-});
-
-newClipButton?.addEventListener('click', (event) => {
-  event.preventDefault();
-
-  const startMM = parseFloat(startInputMM.value);
-  const startSS = parseFloat(startInputSS.value);
-  const endMM = parseFloat(endInputMM.value);
-  const endSS = parseFloat(endInputSS.value);
-
-  if (startSS >= 60 || endSS >= 60) {
-    alert('Error SS >= 60');
-    return;
-  }
-
-  const start = startMM * 60 + startSS;
-  const end = endMM * 60 + endSS;
-
-  if (start < wavesurfer.getDuration() || end <= wavesurfer.getDuration())
-    wavesurfer.addRegion({ start, end, color: 'rgba(255, 0, 0, 0.5)' });
-  else alert('Error');
-
-  console.log(start);
-  console.log(end);
 });
 
 export const addClip = (newRegion: Clip) => {
@@ -106,10 +82,16 @@ export const addClipRow = (clip: Clip) => {
             <span class="material-icons cursor-pointer" id="${
               clip.id
             }-delete">delete</span>
-        </td>
-      </tr>`;
+            </td>
+            </tr>`;
 
   clipsRoot!.innerHTML += tr;
+};
+
+export const deleteClip = (regionId: number) => {
+  wavesurfer.regions.list[regionId].remove();
+  clips = clips.filter((clip) => clip.id !== regionId);
+  deleteClipsRow(regionId);
 };
 
 export const deleteClipsRow = (clipId: number) => {
@@ -151,12 +133,6 @@ export const playClip = (regionId: number, playClipButton: HTMLElement) => {
     wavesurfer.pause();
     playClipButton.textContent = 'play_arrow';
   }
-};
-
-export const deleteClip = (regionId: number) => {
-  wavesurfer.regions.list[regionId].remove();
-  clips = clips.filter((clip) => clip.id !== regionId);
-  deleteClipsRow(regionId);
 };
 
 const encodeAudio = (audioData: any, emptyBuffer: any[]) => {
@@ -235,3 +211,27 @@ export const downloadClip = async (
 fileInput.addEventListener('change', () => readFile(), false);
 
 playButton?.addEventListener('click', () => handlePlayAndPause(playButton));
+
+newClipButton?.addEventListener('click', (event) => {
+  event.preventDefault();
+
+  const startMM = parseFloat(startInputMM.value);
+  const startSS = parseFloat(startInputSS.value);
+  const endMM = parseFloat(endInputMM.value);
+  const endSS = parseFloat(endInputSS.value);
+
+  if (startSS >= 60 || endSS >= 60) {
+    alert('Error SS >= 60');
+    return;
+  }
+
+  const start = startMM * 60 + startSS;
+  const end = endMM * 60 + endSS;
+
+  if (start < wavesurfer.getDuration() || end <= wavesurfer.getDuration())
+    wavesurfer.addRegion({ start, end, color: 'rgba(255, 0, 0, 0.5)' });
+  else alert('Error');
+
+  console.log(start);
+  console.log(end);
+});
