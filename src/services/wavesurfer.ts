@@ -62,10 +62,10 @@ wavesurfer.on('ready', () => {
   const totalAudioDuration = wavesurfer.getDuration();
   const formattedTime = formatTime(totalAudioDuration);
   timeTotal!.textContent = formattedTime;
-  toggleLoading('cut-new-clip', true);
+  toggleLoading(true);
 });
 
-wavesurfer.on('destroy', () => toggleLoading('cut-new-clip', false));
+wavesurfer.on('destroy', () => toggleLoading(false));
 
 wavesurfer.on('audioprocess', () => {
   const currentTime = wavesurfer.getCurrentTime();
@@ -75,7 +75,7 @@ wavesurfer.on('audioprocess', () => {
 });
 
 wavesurfer.on('region-created', (newRegion: Clip) => {
-  if (clips.length === 0) toggleLoading('clips-list', true);
+  if (clips.length === 0) toggleLoading(true);
   addClip(newRegion);
   addClipRow(newRegion);
   clips.map((clip) => {
@@ -96,7 +96,7 @@ wavesurfer.on('region-created', (newRegion: Clip) => {
     downloadClipButton!.addEventListener(
       'click',
       () => {
-        toggleLoading('loading', true);
+        toggleLoading(true);
         downloadClip(wavesurfer.backend as ExtendedWaveSurferBackend, clip);
       },
       false
@@ -120,7 +120,7 @@ wavesurfer.on('region-update-end', (newRegion: Clip) => {
   downloadClipButton!.addEventListener(
     'click',
     () => {
-      toggleLoading('loading', true);
+      toggleLoading(true);
       downloadClip(wavesurfer.backend as ExtendedWaveSurferBackend, newRegion);
     },
     false

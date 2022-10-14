@@ -51,11 +51,10 @@ const displaySamples = () =>
     sampleElement!.addEventListener(
       'click',
       () => {
-        toggleLoading('loading', true);
+        toggleLoading(true);
         wavesurfer.load(sample.file);
         wavesurfer.on('ready', () => {
-          toggleLoading('loading', false);
-          toggleLoading('samples', false);
+          toggleLoading(false);
           samplesSection!.innerHTML = '';
           samplesSection!.classList.replace('grid', 'hidden');
           fileInput!.classList.add('hidden');
@@ -243,11 +242,11 @@ export const downloadClip = async (
       downloadClipButton!.href = processedAudio.src;
       downloadClipButton!.download = `suono-${clip.id}.mp3`;
       downloadClipButton!.click();
-      toggleLoading('loading', false);
+      toggleLoading(false);
     })
     .catch((c) => {
       console.log(c);
-      toggleLoading('loading', false);
+      toggleLoading(false);
     });
 };
 
