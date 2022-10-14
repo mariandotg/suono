@@ -65,9 +65,10 @@ wavesurfer.on('ready', () => {
   const totalAudioDuration = wavesurfer.getDuration();
   const formattedTime = formatTime(totalAudioDuration);
   timeTotal!.textContent = formattedTime;
-  toggleLoading(false);
   hideElement('audio-file-section', 'flex');
   displayElement('detail-tab', 'flex');
+  displayElement('cut-new-clip', 'flex');
+  toggleLoading(false);
 });
 
 wavesurfer.on('destroy', () => toggleLoading(false));
@@ -80,7 +81,7 @@ wavesurfer.on('audioprocess', () => {
 });
 
 wavesurfer.on('region-created', (newRegion: Clip) => {
-  if (clips.length === 0) toggleLoading(true);
+  if (clips.length === 0) displayElement('clips-list', 'flex');
   addClip(newRegion);
   addClipRow(newRegion);
   clips.map((clip) => {
