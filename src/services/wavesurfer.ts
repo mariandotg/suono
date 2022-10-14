@@ -66,7 +66,7 @@ wavesurfer.on('ready', () => {
   const formattedTime = formatTime(totalAudioDuration);
   timeTotal!.textContent = formattedTime;
   toggleLoading(false);
-  hideElement('asd', 'flex');
+  hideElement('audio-file-section', 'flex');
   displayElement('detail-tab', 'flex');
 });
 

@@ -36,20 +36,46 @@
         <span class="sr-only">Loading...</span>
       </div>
     </div>
-    <section class="flex flex-col gap-4">
-      <div
-        class="grid grid-cols-2 gap-4 visible opacity-100"
-        id="samples"
-      ></div>
-      <fieldset>
-        <input
-          class="w-full text-sm file:cursor-pointer file:mr-4 file:outline-none file:px-3 file:py-2 file:text-text file:border file:rounded-base file:border-text/25 file:bg-transparent"
-          type="file"
-          id="audio-file"
-          accept="audio/mpeg, audio/ogg, audio/*"
-        />
-      </fieldset>
-      <span id="detail-tab" class="hidden"></span>
+    <section>
+      <div id="audio-file-section" class="flex flex-col gap-4 mb-4">
+        <div class="grid grid-cols-2 gap-4 visible opacity-100" id="samples">
+          <div
+            class="bg-red-500 p-4 rounded-base cursor-pointer hover:backdrop-opacity-25 hover:brightness-50"
+            id="sample-0"
+          >
+            sample-0
+          </div>
+          <div
+            class="bg-red-500 p-4 rounded-base cursor-pointer hover:backdrop-opacity-25 hover:brightness-50"
+            id="sample-1"
+          >
+            sample-1
+          </div>
+          <div
+            class="bg-red-500 p-4 rounded-base cursor-pointer hover:backdrop-opacity-25 hover:brightness-50"
+            id="sample-2"
+          >
+            sample-2
+          </div>
+          <div
+            class="bg-red-500 p-4 rounded-base cursor-pointer hover:backdrop-opacity-25 hover:brightness-50"
+            id="sample-3"
+          >
+            sample-3
+          </div>
+        </div>
+        <fieldset id="audio-file-fieldset" class="">
+          <input
+            class="w-full text-sm file:cursor-pointer file:mr-4 file:outline-none file:px-3 file:py-2 file:text-text file:border file:rounded-base file:border-text/25 file:bg-transparent"
+            type="file"
+            id="audio-file"
+            accept="audio/mpeg, audio/ogg, audio/*"
+          />
+        </fieldset>
+      </div>
+      <div id="detail-tab" class="hidden">
+        TESTING <span class="material-icons">close</span>
+      </div>
     </section>
     <section>
       <div id="waveform"></div>
