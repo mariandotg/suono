@@ -18,6 +18,9 @@ import {
   downloadClip,
 } from '../main';
 
+import { hideElement } from '../utils/hideElement';
+import { displayElement } from '../utils/displayElement';
+
 const wavesurfer = WaveSurfer.create({
   container: '#waveform',
   scrollParent: true,
@@ -62,7 +65,9 @@ wavesurfer.on('ready', () => {
   const totalAudioDuration = wavesurfer.getDuration();
   const formattedTime = formatTime(totalAudioDuration);
   timeTotal!.textContent = formattedTime;
-  toggleLoading(true);
+  toggleLoading(false);
+  hideElement('asd', 'flex');
+  displayElement('detail-tab', 'flex');
 });
 
 wavesurfer.on('destroy', () => toggleLoading(false));

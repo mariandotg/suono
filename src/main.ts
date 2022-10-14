@@ -36,38 +36,18 @@ const samples = [
   },
 ];
 
-const displaySamples = () =>
-  samples.map((sample, index) => {
-    const sampleTemplate = `
-    <div
-      class="bg-red-500 p-4 rounded-base cursor-pointer hover:backdrop-opacity-25 hover:brightness-50"
-      id="sample-${index}"
-    >
-      ${sample.title}
-    </div>
-  `;
-    samplesSection!.innerHTML += sampleTemplate;
-    const sampleElement = document.getElementById(`sample-${index}`);
-    sampleElement!.addEventListener(
-      'click',
-      () => {
-        toggleLoading(true);
-        wavesurfer.load(sample.file);
-        wavesurfer.on('ready', () => {
-          toggleLoading(false);
-          samplesSection!.innerHTML = '';
-          samplesSection!.classList.replace('grid', 'hidden');
-          fileInput!.classList.add('hidden');
-          detailTab!.classList.replace('hidden', 'flex');
-          detailTab!.innerHTML = sample.title;
-        });
-      },
-      false
-    );
-    return samplesSection;
-  });
-
-displaySamples();
+samples.map((sample, index) => {
+  const sampleElement = document.getElementById(`sample-${index}`);
+  sampleElement!.innerHTML = sample.title;
+  return sampleElement!.addEventListener(
+    'click',
+    () => {
+      toggleLoading(true);
+      wavesurfer.load(sample.file);
+    },
+    false
+  );
+});
 
 newClipButton?.addEventListener('click', (event) => {
   event.preventDefault();
@@ -251,7 +231,5 @@ export const downloadClip = async (
 };
 
 fileInput.addEventListener('change', () => readFile(), false);
-fileInput.removeEventListener('change', () => readFile(), false);
 
 playButton?.addEventListener('click', () => handlePlayAndPause(playButton));
-playButton?.removeEventListener('click', () => handlePlayAndPause(playButton));
