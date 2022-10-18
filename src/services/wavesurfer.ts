@@ -66,8 +66,11 @@ wavesurfer.on('ready', () => {
   const formattedTime = formatTime(totalAudioDuration);
   timeTotal!.textContent = formattedTime;
   hideElement('audio-file-section', 'flex');
-  displayElement('detail-tab', 'flex');
+  displayElement('detail-tab', 'inline-flex');
   displayElement('cut-new-clip', 'flex');
+  const detailsSection = document.getElementById('details-section');
+  detailsSection!.classList.replace('p-4', 'border-b');
+  detailsSection!.classList.add('border-text/25');
   toggleLoading(false);
 });
 
