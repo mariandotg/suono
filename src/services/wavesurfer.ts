@@ -71,8 +71,6 @@ wavesurfer.on('ready', () => {
   toggleLoading(false);
 });
 
-wavesurfer.on('destroy', () => toggleLoading(false));
-
 wavesurfer.on('audioprocess', () => {
   const currentTime = wavesurfer.getCurrentTime();
   const formattedTime = formatTime(currentTime);
