@@ -12,7 +12,7 @@
       rel="stylesheet"
     />
   </head>
-  <body class="flex flex-col gap-4 p-4 bg-background text-text">
+  <body class="flex flex-col bg-background text-text">
     <div
       class="fixed z-50 w-screen h-screen opacity-0 invisible bg-background/75 flex items-center justify-center top-0 left-0"
       id="loading"
@@ -36,8 +36,8 @@
         <span class="sr-only">Loading...</span>
       </div>
     </div>
-    <section>
-      <div id="audio-file-section" class="flex flex-col gap-4 mb-4">
+    <section id="details-section" class="p-4">
+      <div id="audio-file-section" class="flex flex-col gap-4">
         <div class="grid grid-cols-2 gap-4 visible opacity-100" id="samples">
           <div
             class="bg-red-500 p-4 rounded-base cursor-pointer hover:backdrop-opacity-25 hover:brightness-50"
@@ -73,30 +73,37 @@
           />
         </fieldset>
       </div>
-      <div id="detail-tab" class="hidden">
-        <span id="detail-tab-file-name">name</span>
-        <span class="material-icons">close</span>
-      </div>
-    </section>
-    <section>
-      <div id="waveform"></div>
-      <div id="wave-timeline"></div>
-    </section>
-    <section class="flex items-center gap-4">
-      <button
-        class="flex justify-center bg-transparent border border-text/25 rounded-base"
+      <div
+        id="detail-tab"
+        class="hidden border-text/25 border-t border-x p-2 ml-4 mt-4 rounded-tl-base rounded-tr-base"
       >
-        <span class="material-icons p-2 cursor-pointer" id="play"
-          >play_arrow</span
+        <span id="detail-tab-file-name" class="mr-4">name</span>
+        <span class="material-icons cursor-pointer" id="detail-tab-close-file"
+          >close</span
         >
-      </button>
-      <div class="flex gap-1">
-        <p id="time-current" class="underline underline-offset-2">00:00</p>
-        /
-        <p id="time-total" class="underline underline-offset-2">00:00</p>
       </div>
     </section>
-    <div class="grid grid-cols-1 gap-x-4 gap-y-4 tablet:grid-cols-4">
+    <section class="flex flex-col gap-4 p-4">
+      <div>
+        <div id="waveform"></div>
+        <div id="wave-timeline"></div>
+      </div>
+      <div class="flex items-center gap-4">
+        <button
+          class="flex justify-center bg-transparent border border-text/25 rounded-base"
+        >
+          <span class="material-icons p-2 cursor-pointer" id="play"
+            >play_arrow</span
+          >
+        </button>
+        <div class="flex gap-1">
+          <p id="time-current" class="underline underline-offset-2">00:00</p>
+          /
+          <p id="time-total" class="underline underline-offset-2">00:00</p>
+        </div>
+      </div>
+    </section>
+    <div class="grid grid-cols-1 gap-x-4 gap-y-4 tablet:grid-cols-4 p-4">
       <section
         class="hidden flex-col gap-4 tablet:order-last tablet:col-span-1"
         id="cut-new-clip"
@@ -178,6 +185,6 @@
     </div>
   </body>
   <footer>
-    <div class="hidden bg-red-500"></div>
+    <div class="inline-flex"></div>
   </footer>
 </html>
