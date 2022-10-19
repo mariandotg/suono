@@ -102,16 +102,6 @@ export const deleteClipsRow = (clipId: number) => {
 
 const readFile = () => {
   fileReader.readAsArrayBuffer(fileInput.files![0]);
-
-  fileReader.onload = (event) => {
-    audioCtx
-      .decodeAudioData(event.target!.result as ArrayBuffer)
-      .then((buffer) => {
-        const sound = audioCtx.createBufferSource();
-        sound.buffer = buffer;
-      });
-  };
-
   wavesurfer.load(URL.createObjectURL(fileInput.files![0]));
   detailTabName!.textContent = fileInput.files![0].name;
 };
