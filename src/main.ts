@@ -15,6 +15,7 @@ const samples = [
 ];
 
 const detailTabName = document.getElementById('detail-tab-file-name');
+const detailTabCloseFile = document.getElementById('detail-tab-close-file');
 const samplesSection = document.getElementById('samples');
 const fileInput = document.getElementById('audio-file') as HTMLInputElement;
 const playButton = document.getElementById('play');
@@ -234,4 +235,8 @@ newClipButton?.addEventListener('click', (event) => {
 
   console.log(start);
   console.log(end);
+});
+
+detailTabCloseFile?.addEventListener('click', () => {
+  location.reload();
 });
