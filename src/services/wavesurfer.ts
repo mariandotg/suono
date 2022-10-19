@@ -70,7 +70,6 @@ wavesurfer.on('ready', () => {
   displayElement('cut-new-clip', 'flex');
   const detailsSection = document.getElementById('details-section');
   detailsSection!.classList.replace('p-4', 'border-b');
-  detailsSection!.classList.add('border-text/25');
   toggleLoading(false);
 });
 
