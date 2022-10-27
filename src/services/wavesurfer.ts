@@ -6,20 +6,18 @@ import RegionsPlugin from 'wavesurfer.js/dist/plugin/wavesurfer.regions.js';
 import { formatTime } from '../utils/format';
 import { isTouchScreenDevice } from '../utils/isTouchScreenDevice';
 import { toggleLoading } from '../utils/toggleLoading';
-
-import { Clip, ExtendedWaveSurferBackend } from '../types';
-
+import { hideElement } from '../utils/hideElement';
+import { displayElement } from '../utils/displayElement';
 import {
   addClip,
   addClipRow,
   clips,
   deleteClip,
-  playClip,
   downloadClip,
-} from '../main';
+  playClip,
+} from '../utils/clip';
 
-import { hideElement } from '../utils/hideElement';
-import { displayElement } from '../utils/displayElement';
+import { Clip, ExtendedWaveSurferBackend } from '../types';
 
 const wavesurfer = WaveSurfer.create({
   container: '#waveform',
