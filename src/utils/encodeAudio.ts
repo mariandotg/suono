@@ -1,7 +1,7 @@
 export const encodeAudio = (audioData: any, emptyBuffer: any[]) => {
   return new Promise((resolve, reject) => {
     const audioWorker = new Worker(
-      new URL('./worker/worker.ts', import.meta.url),
+      new URL('../worker/worker.ts', import.meta.url),
       { type: 'module' }
     );
 
