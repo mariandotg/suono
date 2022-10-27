@@ -6,17 +6,18 @@ import RegionsPlugin from 'wavesurfer.js/dist/plugin/wavesurfer.regions.js';
 import { formatTime } from '../utils/format';
 import { isTouchScreenDevice } from '../utils/isTouchScreenDevice';
 import { toggleLoading } from '../utils/toggleLoading';
-
+import { hideElement } from '../utils/hideElement';
+import { displayElement } from '../utils/displayElement';
 import {
   addClip,
   addClipRow,
   clips,
   deleteClip,
-  playClip,
   downloadClip,
-} from '../main';
+  playClip,
+} from '../utils/clip';
 
-import { Clip } from '../types';
+import { Clip, ExtendedWaveSurferBackend } from '../types';
 
 const wavesurfer = WaveSurfer.create({
   container: '#waveform',
@@ -61,12 +62,14 @@ if (!isTouchScreenDevice()) {
 wavesurfer.on('ready', () => {
   const totalAudioDuration = wavesurfer.getDuration();
   const formattedTime = formatTime(totalAudioDuration);
-
   timeTotal!.textContent = formattedTime;
-  toggleLoading('cut-new-clip', true);
+  hideElement('audio-file-section', 'flex');
+  displayElement('detail-tab', 'inline-flex');
+  displayElement('cut-new-clip', 'flex');
+  const detailsSection = document.getElementById('details-section');
+  detailsSection!.classList.replace('p-4', 'border-b');
+  toggleLoading(false);
 });
-
-wavesurfer.on('destroy', () => toggleLoading('cut-new-clip', false));
 
 wavesurfer.on('audioprocess', () => {
   const currentTime = wavesurfer.getCurrentTime();
@@ -76,12 +79,13 @@ wavesurfer.on('audioprocess', () => {
 });
 
 wavesurfer.on('region-created', (newRegion: Clip) => {
-  if (clips.length === 0) toggleLoading('clips-list', true);
+  if (clips.length === 0) displayElement('clips-list', 'flex');
   addClip(newRegion);
   addClipRow(newRegion);
   clips.map((clip) => {
     const playClipButton = document.getElementById(`${clip.id}-play`);
     const deleteClipButton = document.getElementById(`${clip.id}-delete`);
+    const downloadClipButton = document.getElementById(`${clip.id}-download`);
 
     playClipButton!.addEventListener(
       'click',
@@ -91,6 +95,14 @@ wavesurfer.on('region-created', (newRegion: Clip) => {
     deleteClipButton!.addEventListener(
       'click',
       () => deleteClip(clip.id),
+      false
+    );
+    downloadClipButton!.addEventListener(
+      'click',
+      () => {
+        toggleLoading(true);
+        downloadClip(wavesurfer.backend as ExtendedWaveSurferBackend, clip);
+      },
       false
     );
     return true;
@@ -105,18 +117,9 @@ wavesurfer.on('region-update-end', (newRegion: Clip) => {
     newRegion.end
   );
 
-  const downloadClipButton = document.getElementById(
-    `${newRegion.id}-download`
-  );
-
-  downloadClipButton!.addEventListener(
-    'click',
-    () => {
-      toggleLoading('loading', true);
-      downloadClip(wavesurfer.backend.ac, wavesurfer.backend.buffer, newRegion);
-    },
-    false
-  );
+  const { start, end, id } = newRegion;
+  const clipIndex = clips.findIndex((d) => d.id === id);
+  clips[clipIndex] = { start, end, id };
 });
 
 wavesurfer.on('region-out', (region: Clip) => {
