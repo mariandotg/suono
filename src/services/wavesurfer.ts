@@ -119,18 +119,9 @@ wavesurfer.on('region-update-end', (newRegion: Clip) => {
     newRegion.end
   );
 
-  const downloadClipButton = document.getElementById(
-    `${newRegion.id}-download`
-  );
-
-  downloadClipButton!.addEventListener(
-    'click',
-    () => {
-      toggleLoading(true);
-      downloadClip(wavesurfer.backend as ExtendedWaveSurferBackend, newRegion);
-    },
-    false
-  );
+  const { start, end, id } = newRegion;
+  const clipIndex = clips.findIndex((d) => d.id === id);
+  clips[clipIndex] = { start, end, id };
 });
 
 wavesurfer.on('region-out', (region: Clip) => {

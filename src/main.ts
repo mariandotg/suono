@@ -144,7 +144,6 @@ const encodeAudio = (audioData: any, emptyBuffer: any[]) => {
     audioWorker.postMessage({ audioData, emptyBuffer });
   });
 };
-
 export const downloadClip = async (
   backend: ExtendedWaveSurferBackend,
   clip: Clip
@@ -152,9 +151,11 @@ export const downloadClip = async (
   const audioCtx = backend.getAudioContext();
   const originalBuffer = backend.buffer;
 
-  const segmentDuration = clip.end - clip.start;
-  const init = clip.start * originalBuffer.sampleRate;
-  const fin = clip.end * originalBuffer.sampleRate;
+  const clipFromArray = clips.find((d) => d.id === clip.id);
+
+  const segmentDuration = clipFromArray!.end - clipFromArray!.start;
+  const init = clipFromArray!.start * originalBuffer.sampleRate;
+  const fin = clipFromArray!.end * originalBuffer.sampleRate;
 
   const emptyBuffer: Array<any> = [];
   const emptySegment = audioCtx.createBuffer(
