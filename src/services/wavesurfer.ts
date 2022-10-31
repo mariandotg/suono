@@ -55,10 +55,6 @@ const wavesurfer = WaveSurfer.create({
 const timeCurrent = document.getElementById('time-current');
 const timeTotal = document.getElementById('time-total');
 
-if (!isTouchScreenDevice()) {
-  wavesurfer.enableDragSelection({ color: 'rgba(255, 0, 0, 0.5)' });
-}
-
 wavesurfer.on('ready', () => {
   const totalAudioDuration = wavesurfer.getDuration();
   const formattedTime = formatTime(totalAudioDuration);
@@ -69,6 +65,10 @@ wavesurfer.on('ready', () => {
   const detailsSection = document.getElementById('details-section');
   detailsSection!.classList.replace('p-4', 'border-b');
   toggleLoading(false);
+
+  if (!isTouchScreenDevice()) {
+    wavesurfer.enableDragSelection({ color: 'rgba(255, 0, 0, 0.5)' });
+  }
 });
 
 wavesurfer.on('audioprocess', () => {
