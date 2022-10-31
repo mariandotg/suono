@@ -126,4 +126,10 @@ wavesurfer.on('region-out', (region: Clip) => {
   document.getElementById(`${region.id}-play`)!.textContent = 'play_arrow';
 });
 
+wavesurfer.on('error', (error: any) => {
+  console.log(error);
+  alert(error);
+  toggleLoading(false);
+});
+
 export default wavesurfer;
