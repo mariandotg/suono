@@ -3,12 +3,7 @@ import wavesurfer from './services/wavesurfer';
 import { toggleLoading } from './utils/toggleLoading';
 import { detailTabName, fileInput, readFile } from './utils/readFile';
 
-const samples = [
-  {
-    title: 'test',
-    file: '/test.mp3',
-  },
-];
+import samples from './samples';
 
 const detailTabCloseFile = document.getElementById('detail-tab-close-file');
 const playButton = document.getElementById('play');
