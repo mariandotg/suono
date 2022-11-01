@@ -5,6 +5,7 @@ import { encodeAudio } from './encodeAudio';
 import { toggleLoading } from './toggleLoading';
 
 import { Clip, ExtendedWaveSurferBackend } from '../types';
+import { formatId } from './formatId';
 
 export let clips: Array<Clip> = [];
 
@@ -104,7 +105,7 @@ export const downloadClip = async (
       processedAudio.src = URL.createObjectURL(blob);
       const downloadClipButton = document.createElement('a');
       downloadClipButton!.href = processedAudio.src;
-      downloadClipButton!.download = `suono-${clip.id}.mp3`;
+      downloadClipButton!.download = `suono-${formatId(clip.id)}.mp3`;
       downloadClipButton!.click();
       toggleLoading(false);
     })
