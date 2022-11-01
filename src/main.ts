@@ -21,10 +21,10 @@ const endInputSS = document.getElementById(
   'new-clip-end-ss'
 ) as HTMLInputElement;
 
-samples.map((sample, index) => {
+samples.forEach((sample, index) => {
   const sampleElement = document.getElementById(`sample-${index}`);
   sampleElement!.innerHTML = sample.title;
-  return sampleElement!.addEventListener(
+  sampleElement!.addEventListener(
     'click',
     () => {
       toggleLoading(true);
