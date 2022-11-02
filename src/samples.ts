@@ -1,18 +1,18 @@
 const samples = [
   {
-    title: 'coming soon',
+    title: 'Coming soon',
     file: '/comingsoon.mp3',
   },
   {
-    title: 'coming soon',
+    title: 'Coming soon',
     file: '/comingsoon.mp3',
   },
   {
-    title: 'coming soon',
+    title: 'Coming soon',
     file: '/comingsoon.mp3',
   },
   {
-    title: 'coming soon',
+    title: 'Coming soon',
     file: '/comingsoon.mp3',
   },
 ];

@@ -61,6 +61,7 @@ wavesurfer.on('ready', () => {
   timeTotal!.textContent = formattedTime;
   hideElement('audio-file-section', 'flex');
   displayElement('detail-tab', 'inline-flex');
+  displayElement('clips-list', 'flex');
   displayElement('cut-new-clip', 'flex');
   const detailsSection = document.getElementById('details-section');
   detailsSection!.classList.replace('p-4', 'border-b');
@@ -79,7 +80,6 @@ wavesurfer.on('audioprocess', () => {
 });
 
 wavesurfer.on('region-created', (newRegion: Clip) => {
-  if (clips.length === 0) displayElement('clips-list', 'flex');
   addClip(newRegion);
   addClipRow(newRegion);
   clips.map((clip) => {
