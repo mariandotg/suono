@@ -55,20 +55,21 @@ const wavesurfer = WaveSurfer.create({
 const timeCurrent = document.getElementById('time-current');
 const timeTotal = document.getElementById('time-total');
 
-if (!isTouchScreenDevice()) {
-  wavesurfer.enableDragSelection({ color: 'rgba(255, 0, 0, 0.5)' });
-}
-
 wavesurfer.on('ready', () => {
   const totalAudioDuration = wavesurfer.getDuration();
   const formattedTime = formatTime(totalAudioDuration);
   timeTotal!.textContent = formattedTime;
   hideElement('audio-file-section', 'flex');
   displayElement('detail-tab', 'inline-flex');
+  displayElement('clips-list', 'flex');
   displayElement('cut-new-clip', 'flex');
   const detailsSection = document.getElementById('details-section');
   detailsSection!.classList.replace('p-4', 'border-b');
   toggleLoading(false);
+
+  if (!isTouchScreenDevice()) {
+    wavesurfer.enableDragSelection({ color: 'rgba(255, 0, 0, 0.5)' });
+  }
 });
 
 wavesurfer.on('audioprocess', () => {
@@ -79,7 +80,6 @@ wavesurfer.on('audioprocess', () => {
 });
 
 wavesurfer.on('region-created', (newRegion: Clip) => {
-  if (clips.length === 0) displayElement('clips-list', 'flex');
   addClip(newRegion);
   addClipRow(newRegion);
   clips.map((clip) => {
@@ -124,6 +124,12 @@ wavesurfer.on('region-update-end', (newRegion: Clip) => {
 
 wavesurfer.on('region-out', (region: Clip) => {
   document.getElementById(`${region.id}-play`)!.textContent = 'play_arrow';
+});
+
+wavesurfer.on('error', (error: any) => {
+  console.log(error);
+  alert(error);
+  toggleLoading(false);
 });
 
 export default wavesurfer;

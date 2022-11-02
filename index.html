@@ -2,14 +2,18 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="icon" type="image/ico" href="/icon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Suono</title>
+    <title>Suono - by Mariano Guillaume</title>
     <script type="module" src="/src/main.ts"></script>
     <link rel="stylesheet" href="/src/style.css" />
     <link
       href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet"
+    />
+    <meta
+      name="description"
+      content="Suono is a webapp for audio trimming in the browser, no server side. By Mariano Guillaume"
     />
   </head>
   <body class="flex flex-col bg-background text-text">
@@ -38,6 +42,7 @@
     </div>
     <section id="details-section" class="p-4 border-text/25">
       <div id="audio-file-section" class="flex flex-col gap-4">
+        <h2 class="text-2xl font-bold">Audio samples (Coming soon)</h2>
         <div class="grid grid-cols-2 gap-4 visible opacity-100" id="samples">
           <div
             class="bg-red-500 p-4 rounded-base cursor-pointer hover:backdrop-opacity-25 hover:brightness-50"
@@ -64,6 +69,7 @@
             sample-3
           </div>
         </div>
+        <h2 class="text-2xl font-bold">Select an audio file</h2>
         <fieldset id="audio-file-fieldset" class="">
           <input
             class="w-full text-sm file:cursor-pointer file:mr-4 file:outline-none file:px-3 file:py-2 file:text-text file:border file:rounded-base file:border-text/25 file:bg-transparent"
@@ -75,7 +81,7 @@
       </div>
       <div
         id="detail-tab"
-        class="hidden border-text/25 border-t border-x p-2 ml-4 mt-4 rounded-tl-base rounded-tr-base"
+        class="hidden border-text/25 border-t border-x py-2 px-4 ml-4 mt-4 rounded-tl-base rounded-tr-base"
       >
         <span id="detail-tab-file-name" class="mr-4">name</span>
         <span class="material-icons cursor-pointer" id="detail-tab-close-file"
@@ -184,7 +190,7 @@
       </section>
     </div>
   </body>
-  <footer>
-    <div class="inline-flex border-b"></div>
+  <footer class="flex justify-center p-8">
+    <div class="inline-flex border-b">by Mariano Guillaume</div>
   </footer>
 </html>
